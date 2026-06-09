@@ -1,0 +1,85 @@
+<section class="page-shell">
+  <header class="hero">
+    <h1>Painel de Escalas</h1>
+    <p>Cada linha representa um mes com o estado das disponibilidades.</p>
+  </header>
+
+  <section class="panel form-grid">
+    <div class="field">
+      <label for="new-client">Novo cliente</label>
+      <input id="new-client" [(ngModel)]="newClientName" placeholder="Ex.: Canto do Rio" />
+    </div>
+    <button type="button" (click)="createClient()">Criar cliente</button>
+
+    <div class="field">
+      <label for="client-select">Cliente ativo</label>
+      <select
+        id="client-select"
+        [ngModel]="selectedClientId()"
+        (ngModelChange)="selectedClientId.set($event)"
+      >
+        @for (client of clients(); track client.id) {
+          <option [value]="client.id">{{ client.name }}</option>
+        }
+      </select>
+    </div>
+  </section>
+
+  @if (selectedClientId()) {
+    <section class="panel form-grid month-create">
+      <h2>Criar mes</h2>
+      <div class="field small">
+        <label for="month-year">Ano</label>
+        <input id="month-year" type="number" [(ngModel)]="newMonthYear" />
+      </div>
+      <div class="field small">
+        <label for="month-month">Mes</label>
+        <input id="month-month" type="number" min="1" max="12" [(ngModel)]="newMonthMonth" />
+      </div>
+      <button type="button" (click)="createMonth()">Adicionar mes</button>
+    </section>
+
+    <section class="panel table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Estado das disponibilidades</th>
+            <th>Linhas de horario</th>
+            <th>Acoes</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (summary of monthSummaries(); track summary.month.id) {
+            <tr>
+              <td>
+                <a [routerLink]="['/cliente', selectedClientId(), 'mes', summary.month.id]">
+                  {{ summary.month.label }}
+                </a>
+              </td>
+              <td>
+                <span class="status" [attr.data-status]="summary.status">{{ summary.status }}</span>
+              </td>
+              <td>{{ summary.slotsCount }}</td>
+              <td>
+                <button
+                  type="button"
+                  class="ghost"
+                  (click)="toggleRequested(summary.month.id, summary.month.availabilityRequested)"
+                >
+                  {{ summary.month.availabilityRequested ? 'Marcar por requisitar' : 'Pedir disponibilidades' }}
+                </button>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4">Ainda nao existem meses para este cliente.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  } @else {
+    <section class="panel empty-state">Cria um cliente para comecar.</section>
+  }
+</section>

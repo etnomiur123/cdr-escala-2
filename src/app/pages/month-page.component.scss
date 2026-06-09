@@ -1,0 +1,163 @@
+.page-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.hero {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: start;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 1.9rem;
+}
+
+.hero p {
+  margin: 0.4rem 0 0;
+  color: var(--muted);
+}
+
+.ghost-link {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.45rem 0.8rem;
+  text-decoration: none;
+  color: inherit;
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 0.9rem;
+}
+
+.month-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.month-tabs a {
+  text-decoration: none;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: inherit;
+}
+
+.month-tabs a.active {
+  background: #fff3e4;
+  border-color: #ffbb67;
+}
+
+.inner-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.inner-tabs button.active {
+  background: #1f2a44;
+  color: white;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.7rem;
+}
+
+.controls label {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  border-bottom: 1px solid var(--line);
+  padding: 0.45rem;
+  vertical-align: top;
+}
+
+td select,
+td input {
+  width: 100%;
+}
+
+.flag-select {
+  margin-top: 0.3rem;
+}
+
+.flag-green {
+  background: #eeffef;
+}
+
+.flag-yellow {
+  background: #fff9dd;
+}
+
+.flag-red {
+  background: #ffe9e9;
+}
+
+.availability-list {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.availability-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  border-bottom: 1px dashed var(--line);
+  padding-bottom: 0.35rem;
+}
+
+.member-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.members-list {
+  margin-top: 0.9rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.7rem;
+}
+
+.members-list article {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.7rem;
+  display: grid;
+  gap: 0.2rem;
+}
+
+.danger {
+  background: #b92f2f;
+  color: white;
+}
+
+@media (max-width: 900px) {
+  .hero {
+    flex-direction: column;
+  }
+
+  .availability-row {
+    flex-direction: column;
+  }
+}

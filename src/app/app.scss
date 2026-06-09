@@ -1,0 +1,65 @@
+:host {
+	display: block;
+}
+
+.app-shell {
+	max-width: 1300px;
+	margin: 0 auto;
+	padding: 1.2rem;
+	display: grid;
+	gap: 1rem;
+}
+
+.topbar {
+	background: var(--panel-bg);
+	border: 1px solid var(--line);
+	border-radius: 18px;
+	padding: 1rem;
+	display: flex;
+	justify-content: space-between;
+	gap: 1rem;
+	align-items: start;
+}
+
+.brand .eyebrow {
+	margin: 0;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--muted);
+	font-size: 0.75rem;
+}
+
+.brand h1 {
+	margin: 0.4rem 0 0;
+	font-size: 1.7rem;
+}
+
+.auth-box {
+	min-width: 280px;
+	display: grid;
+	gap: 0.55rem;
+}
+
+.auth-box p {
+	margin: 0;
+}
+
+.auth-box label {
+	display: grid;
+	gap: 0.25rem;
+}
+
+.ghost {
+	background: transparent;
+	border: 1px solid var(--line);
+}
+
+@media (max-width: 860px) {
+	.topbar {
+		flex-direction: column;
+	}
+
+	.auth-box {
+		min-width: 100%;
+	}
+}

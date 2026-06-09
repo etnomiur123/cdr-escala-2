@@ -1,0 +1,92 @@
+.page-shell {
+  display: grid;
+  gap: 1rem;
+}
+
+.hero h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.hero p {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--panel-bg);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 1rem;
+}
+
+.form-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  align-items: end;
+}
+
+.field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.field.small {
+  max-width: 110px;
+}
+
+.table-wrap {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 0.65rem;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+
+.status {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 0.15rem 0.7rem;
+  font-size: 0.85rem;
+  border: 1px solid transparent;
+}
+
+.status[data-status='Por requisitar'] {
+  background: #f3f1ff;
+  border-color: #cbc4ff;
+}
+
+.status[data-status='Vazio'] {
+  background: #fff4f1;
+  border-color: #ffc9bc;
+}
+
+.status[data-status='Parcialmente preenchidas'] {
+  background: #fff9e8;
+  border-color: #ffdd87;
+}
+
+.status[data-status='Totalmente preenchidas'] {
+  background: #edfff0;
+  border-color: #7fdd97;
+}
+
+.ghost {
+  background: transparent;
+  border: 1px solid var(--line);
+  color: inherit;
+}
+
+.empty-state {
+  text-align: center;
+  color: var(--muted);
+}
