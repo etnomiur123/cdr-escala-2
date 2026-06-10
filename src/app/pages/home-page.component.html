@@ -7,9 +7,16 @@
   <section class="panel form-grid">
     <div class="field">
       <label for="new-client">Novo cliente</label>
-      <input id="new-client" [(ngModel)]="newClientName" placeholder="Ex.: Canto do Rio" />
+      <input
+        id="new-client"
+        [(ngModel)]="newClientName"
+        placeholder="Ex.: Canto do Rio"
+        [disabled]="!auth.isLoggedIn()"
+      />
     </div>
-    <button type="button" (click)="createClient()">Criar cliente</button>
+    <button type="button" (click)="createClient()" [disabled]="!auth.isLoggedIn()">
+      Criar cliente
+    </button>
 
     <div class="field">
       <label for="client-select">Cliente ativo</label>
@@ -23,6 +30,10 @@
         }
       </select>
     </div>
+
+    @if (errorMessage) {
+      <p class="error">{{ errorMessage }}</p>
+    }
   </section>
 
   @if (selectedClientId()) {

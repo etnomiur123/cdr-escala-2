@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { of, switchMap } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 import { ScheduleDataService } from '../services/schedule-data.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { ScheduleDataService } from '../services/schedule-data.service';
 })
 export class HomePageComponent {
   private readonly data = inject(ScheduleDataService);
+  readonly auth = inject(AuthService);
 
   readonly clients = toSignal(this.data.observeClients(), { initialValue: [] });
   readonly selectedClientId = signal('');
@@ -34,6 +36,7 @@ export class HomePageComponent {
 
   newMonthYear = new Date().getFullYear();
   newMonthMonth = new Date().getMonth() + 1;
+  errorMessage = '';
 
   constructor() {
     effect(() => {
@@ -50,13 +53,23 @@ export class HomePageComponent {
   }
 
   async createClient() {
+    this.errorMessage = '';
+    if (!this.auth.isLoggedIn()) {
+      this.errorMessage = 'Precisas de iniciar sessao com Google para criares clientes.';
+      return;
+    }
+
     const name = this.newClientName.trim();
     if (!name) {
       return;
     }
 
-    await this.data.createClient(name);
-    this.newClientName = '';
+    try {
+      await this.data.createClient(name);
+      this.newClientName = '';
+    } catch {
+      this.errorMessage = 'Sem permissao para criar cliente. Verifica regras Firestore e autenticacao.';
+    }
   }
 
   async createMonth() {
