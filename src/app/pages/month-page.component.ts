@@ -13,6 +13,11 @@ import {
   ScheduleSlot
 } from '../models/schedule.models';
 
+interface MemberOption {
+  id: string;
+  name: string;
+}
+
 @Component({
   selector: 'app-month-page',
   standalone: true,
@@ -106,17 +111,11 @@ export class MonthPageComponent {
     }
   );
 
-  readonly vocalistas = computed(() =>
-    this.members().filter((member) => member.naipe === 'Vocalista' && member.active)
-  );
+  readonly vocalistas = computed(() => this.memberOptionsForNaipe('Vocalista'));
 
-  readonly guitarras = computed(() =>
-    this.members().filter((member) => member.naipe === 'Guitarra' && member.active)
-  );
+  readonly guitarras = computed(() => this.memberOptionsForNaipe('Guitarra'));
 
-  readonly violas = computed(() =>
-    this.members().filter((member) => member.naipe === 'Viola' && member.active)
-  );
+  readonly violas = computed(() => this.memberOptionsForNaipe('Viola'));
 
   readonly activeTab = signal<'escala' | 'disponibilidade' | 'membros'>('escala');
 
@@ -210,5 +209,30 @@ export class MonthPageComponent {
 
   flagClass(color: CellFlagColor): string {
     return color === 'none' ? '' : `flag-${color}`;
+  }
+
+  private memberOptionsForNaipe(naipe: Naipe): MemberOption[] {
+    const options: MemberOption[] = this.members()
+      .filter((member) => member.naipe === naipe && member.active)
+      .map((member) => ({
+        id: member.id,
+        name: member.name
+      }));
+
+    const profile = this.profile();
+    const authUser = this.auth.user();
+    const userName = authUser?.displayName?.trim() || authUser?.email?.trim() || '';
+
+    if (profile?.naipe === naipe && authUser?.uid && userName) {
+      const alreadyInList = options.some((item) => item.name.toLowerCase() === userName.toLowerCase());
+      if (!alreadyInList) {
+        options.unshift({
+          id: `user-${authUser.uid}`,
+          name: userName
+        });
+      }
+    }
+
+    return options;
   }
 }
