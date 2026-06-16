@@ -1,54 +1,73 @@
+@use '@angular/material' as mat;
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&display=swap');
 
-:root {
-	--bg: radial-gradient(circle at 10% -20%, #fff4dc 0%, #fff8f1 40%, #f4f7ff 100%);
-	--panel-bg: rgba(255, 255, 255, 0.86);
-	--line: #d7dbe7;
-	--text: #172033;
-	--muted: #526078;
+// Azure-blue dark theme (M3 Design System)
+html {
+  color-scheme: dark;
+
+  @include mat.theme((
+    color: (
+      primary: mat.$azure-palette,
+      tertiary: mat.$blue-palette,
+      theme-type: dark,
+    ),
+    typography: Roboto,
+    density: 0,
+  ));
+
+  // Custom app tokens aligned with azure-blue dark palette
+  --bg: #0f1117;
+  --panel-bg: #1a1d27;
+  --line: #2e3347;
+  --text: #e2e4ef;
+  --muted: #8b90a7;
 }
 
 * {
-	box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html,
 body {
-	margin: 0;
-	padding: 0;
-	min-height: 100%;
-	color: var(--text);
-	background: var(--bg);
-	font-family: 'Manrope', 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  height: 100%;
+  color: var(--text);
+  background-color: var(--bg);
+  font-family: 'Manrope', 'Segoe UI', sans-serif;
 }
 
 h1,
 h2,
 h3 {
-	font-family: 'Fraunces', Georgia, serif;
+  font-family: 'Fraunces', Georgia, serif;
 }
 
 a {
-	color: #19398a;
+  color: #abc7ff;
 }
 
-button,
-input,
-select {
-	font: inherit;
-	border-radius: 10px;
-	border: 1px solid #c6cee0;
-	padding: 0.45rem 0.55rem;
-	background: white;
+:where(
+  button:not(.mat-mdc-button-base),
+  input:not(.mat-mdc-input-element),
+  select
+) {
+  font: inherit;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  padding: 0.45rem 0.55rem;
+  background: var(--panel-bg);
+  color: var(--text);
 }
 
-button {
-	background: #203a73;
-	color: white;
-	border-color: #203a73;
-	cursor: pointer;
+:where(button:not(.mat-mdc-button-base)) {
+  background: #abc7ff;
+  color: #00315e;
+  border-color: #abc7ff;
+  cursor: pointer;
 }
 
-button:hover {
-	filter: brightness(1.06);
+:where(button:not(.mat-mdc-button-base)):hover {
+  filter: brightness(1.08);
 }

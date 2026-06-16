@@ -1,0 +1,164 @@
+<section class="page-shell">
+  <header class="hero">
+    <h1>Administracao</h1>
+    <p>Gere clientes e o catalogo global de musicos da aplicacao.</p>
+  </header>
+
+  <section class="panel clients-panel">
+    <h2>Clientes</h2>
+
+    <div class="form-grid">
+    <mat-form-field floatLabel="auto" appearance="outline" subscriptSizing="dynamic" class="field-field">
+      <mat-label>Novo cliente</mat-label>
+      <input matInput type="text" [(ngModel)]="newClientName" />
+    </mat-form-field>
+    <button
+      mat-mini-fab
+      type="button"
+      class="add-fab"
+      aria-label="Criar cliente"
+      title="Criar cliente"
+      (click)="createClient()"
+      (contextmenu)="$event.preventDefault(); createClient()"
+    >
+      <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+    </button>
+    </div>
+
+    @if (clients().length) {
+      <div class="clients-list">
+        @for (client of clients(); track client.id) {
+          <article>
+            <strong>{{ client.name }}</strong>
+            <button
+              mat-icon-button
+              type="button"
+              class="danger-icon"
+              aria-label="Remover cliente"
+              title="Remover cliente"
+              (click)="deleteClient(client.id)"
+            >
+                <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+            </button>
+          </article>
+        }
+      </div>
+    } @else {
+      <p class="empty-state">Ainda nao existem clientes.</p>
+    }
+
+    @if (clientErrorMessage) {
+      <p class="error">{{ clientErrorMessage }}</p>
+    }
+  </section>
+
+  <section class="panel client-summary-panel">
+    <div class="summary-header">
+      <h2>Resumo de clientes</h2>
+      <p>Total de musicos ativos na aplicacao: <strong>{{ totalActiveMusicians() }}</strong></p>
+    </div>
+
+    @if (clientSummaries().length) {
+      <div class="summary-grid">
+        @for (summary of clientSummaries(); track summary.id) {
+          <article class="summary-card">
+            <h3>{{ summary.name }}</h3>
+            <p>
+              Ativos: <strong>{{ summary.activeMusicians }}</strong>
+            </p>
+            <ul>
+              <li>Vocalista: {{ summary.activeByNaipe.Vocalista }}</li>
+              <li>Guitarra: {{ summary.activeByNaipe.Guitarra }}</li>
+              <li>Viola: {{ summary.activeByNaipe.Viola }}</li>
+            </ul>
+
+            @if (summary.members.length) {
+              <p class="member-caption">Membros do cliente</p>
+              <ul class="member-details">
+                @for (member of summary.members; track member.id) {
+                  <li>
+                    <span>{{ member.name }}</span>
+                    <small>{{ member.naipe }}{{ member.active ? '' : ' (inativo)' }}</small>
+                    <button
+                      mat-icon-button
+                      type="button"
+                      aria-label="Remover musico"
+                      title="Remover musico"
+                      (click)="deleteMember(member.id)"
+                    >
+                        <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+                    </button>
+                  </li>
+                }
+              </ul>
+            } @else {
+              <p class="empty-state">Sem membros registados.</p>
+            }
+          </article>
+        }
+      </div>
+    } @else {
+      <p class="empty-state">Ainda nao existem clientes para resumir.</p>
+    }
+  </section>
+
+  <section class="panel members-admin">
+    <h2>Painel de musicos da aplicacao</h2>
+    <p>Os musicos adicionados aqui ficam disponiveis para todos os clientes.</p>
+
+    <div class="member-form">
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Nome</mat-label>
+        <input matInput [(ngModel)]="newMemberName" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Naipe</mat-label>
+        <mat-select [(ngModel)]="newMemberNaipe" >
+          <mat-option value="Vocalista">Vocalista</mat-option>
+          <mat-option value="Guitarra">Guitarra</mat-option>
+          <mat-option value="Viola">Viola</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Email (opcional)</mat-label>
+        <input matInput [(ngModel)]="newMemberEmail" />
+      </mat-form-field>
+      <button
+        mat-mini-fab
+        type="button"
+        class="add-fab"
+        aria-label="Adicionar musico"
+        title="Adicionar musico"
+        (click)="addMember()"
+        (contextmenu)="$event.preventDefault(); addMember()"
+      >
+        <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+      </button>
+    </div>
+
+    @if (memberErrorMessage) {
+      <p class="error">{{ memberErrorMessage }}</p>
+    }
+
+    <div class="members-list">
+      @for (member of appMembers(); track member.id) {
+        <article>
+          <strong>{{ member.name }}</strong>
+          <span>{{ member.naipe }}</span>
+          <small>{{ member.email || 'Sem email' }}</small>
+          <button
+            mat-icon-button
+            type="button"
+            aria-label="Remover musico"
+            title="Remover musico"
+            (click)="deleteMember(member.id)"
+          >
+            <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+          </button>
+        </article>
+      } @empty {
+        <p class="empty-state">Ainda nao existem musicos registados na aplicacao.</p>
+      }
+    </div>
+  </section>
+</section>

@@ -32,6 +32,14 @@
   gap: 0.3rem;
 }
 
+.field-field {
+  min-width: 240px;
+}
+
+.small-field {
+  max-width: 130px;
+}
+
 .field.small {
   max-width: 110px;
 }
@@ -61,23 +69,27 @@ td {
 }
 
 .status[data-status='Por requisitar'] {
-  background: #f3f1ff;
-  border-color: #cbc4ff;
+  background: #2a2050;
+  border-color: #7c6fbb;
+  color: #cac4f7;
 }
 
 .status[data-status='Vazio'] {
-  background: #fff4f1;
-  border-color: #ffc9bc;
+  background: #3a1a12;
+  border-color: #b05040;
+  color: #ffb4a8;
 }
 
 .status[data-status='Parcialmente preenchidas'] {
-  background: #fff9e8;
-  border-color: #ffdd87;
+  background: #302500;
+  border-color: #9e7c00;
+  color: #f0c030;
 }
 
 .status[data-status='Totalmente preenchidas'] {
-  background: #edfff0;
-  border-color: #7fdd97;
+  background: #0a2a12;
+  border-color: #2e7d45;
+  color: #7fdd97;
 }
 
 .ghost {
@@ -89,10 +101,4 @@ td {
 .empty-state {
   text-align: center;
   color: var(--muted);
-}
-
-.error {
-  margin: 0;
-  color: #b33030;
-  font-weight: 600;
 }

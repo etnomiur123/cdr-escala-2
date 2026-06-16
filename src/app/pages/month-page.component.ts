@@ -1,6 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { combineLatest, map, of, switchMap } from 'rxjs';
@@ -21,7 +26,16 @@ interface MemberOption {
 @Component({
   selector: 'app-month-page',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    FormsModule,
+    RouterLink,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule
+  ],
   templateUrl: './month-page.component.html',
   styleUrl: './month-page.component.scss'
 })
@@ -72,9 +86,7 @@ export class MonthPageComponent {
   );
 
   readonly members = toSignal(
-    toObservable(this.clientId).pipe(
-      switchMap((clientId) => (clientId ? this.data.observeMembers(clientId) : of([])))
-    ),
+    this.data.observeAppMembers(),
     { initialValue: [] }
   );
 
@@ -121,10 +133,6 @@ export class MonthPageComponent {
 
   newSlotDay = 1;
   newSlotTime = '18:00';
-
-  newMemberName = '';
-  newMemberNaipe: Naipe = 'Vocalista';
-  newMemberEmail = '';
 
   async addSlot() {
     const month = this.month();
@@ -179,32 +187,6 @@ export class MonthPageComponent {
     }
 
     await this.data.setAvailability(clientId, monthId, uid, slotId, response);
-  }
-
-  async addMember() {
-    const clientId = this.clientId();
-    if (!clientId || !this.newMemberName.trim()) {
-      return;
-    }
-
-    await this.data.addMember(clientId, {
-      name: this.newMemberName.trim(),
-      naipe: this.newMemberNaipe,
-      email: this.newMemberEmail.trim() || undefined,
-      active: true
-    });
-
-    this.newMemberName = '';
-    this.newMemberEmail = '';
-  }
-
-  async toggleMemberActive(memberId: string, active: boolean) {
-    const clientId = this.clientId();
-    if (!clientId) {
-      return;
-    }
-
-    await this.data.updateMember(clientId, memberId, { active: !active });
   }
 
   flagClass(color: CellFlagColor): string {

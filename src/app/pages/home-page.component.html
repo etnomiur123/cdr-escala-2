@@ -5,49 +5,31 @@
   </header>
 
   <section class="panel form-grid">
-    <div class="field">
-      <label for="new-client">Novo cliente</label>
-      <input
-        id="new-client"
-        [(ngModel)]="newClientName"
-        placeholder="Ex.: Canto do Rio"
-        [disabled]="!auth.isLoggedIn()"
-      />
-    </div>
-    <button type="button" (click)="createClient()" [disabled]="!auth.isLoggedIn()">
-      Criar cliente
-    </button>
-
-    <div class="field">
-      <label for="client-select">Cliente ativo</label>
-      <select
-        id="client-select"
-        [ngModel]="selectedClientId()"
-        (ngModelChange)="selectedClientId.set($event)"
-      >
+    <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-field">
+      <mat-label>Cliente ativo</mat-label>
+      <mat-select [ngModel]="selectedClientId()" (ngModelChange)="selectedClientId.set($event)">
         @for (client of clients(); track client.id) {
-          <option [value]="client.id">{{ client.name }}</option>
+          <mat-option [value]="client.id">{{ client.name }}</mat-option>
         }
-      </select>
-    </div>
-
-    @if (errorMessage) {
-      <p class="error">{{ errorMessage }}</p>
-    }
+      </mat-select>
+    </mat-form-field>
   </section>
 
   @if (selectedClientId()) {
     <section class="panel form-grid month-create">
       <h2>Criar mes</h2>
-      <div class="field small">
-        <label for="month-year">Ano</label>
-        <input id="month-year" type="number" [(ngModel)]="newMonthYear" />
-      </div>
-      <div class="field small">
-        <label for="month-month">Mes</label>
-        <input id="month-month" type="number" min="1" max="12" [(ngModel)]="newMonthMonth" />
-      </div>
-      <button type="button" (click)="createMonth()">Adicionar mes</button>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-field small-field">
+        <mat-label>Ano</mat-label>
+        <input matInput type="number" [(ngModel)]="newMonthYear" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-field small-field">
+        <mat-label>Mes</mat-label>
+        <input matInput type="number" min="1" max="12" [(ngModel)]="newMonthMonth" />
+      </mat-form-field>
+      <button mat-raised-button type="button" (click)="createMonth()">
+        <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+        <span>Adicionar mes</span>
+      </button>
     </section>
 
     <section class="panel table-wrap">
@@ -74,8 +56,8 @@
               <td>{{ summary.slotsCount }}</td>
               <td>
                 <button
+                  mat-stroked-button
                   type="button"
-                  class="ghost"
                   (click)="toggleRequested(summary.month.id, summary.month.availabilityRequested)"
                 >
                   {{ summary.month.availabilityRequested ? 'Marcar por requisitar' : 'Pedir disponibilidades' }}
@@ -91,6 +73,6 @@
       </table>
     </section>
   } @else {
-    <section class="panel empty-state">Cria um cliente para comecar.</section>
+    <section class="panel empty-state">Ainda nao existem clientes. Usa a secao Administracao para criar o primeiro.</section>
   }
 </section>

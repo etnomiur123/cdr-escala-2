@@ -50,8 +50,9 @@
 }
 
 .month-tabs a.active {
-  background: #fff3e4;
+  background: #2e1f00;
   border-color: #ffbb67;
+  color: #ffd9a0;
 }
 
 .inner-tabs {
@@ -60,8 +61,8 @@
 }
 
 .inner-tabs button.active {
-  background: #1f2a44;
-  color: white;
+  background: #abc7ff;
+  color: #00315e;
 }
 
 .controls {
@@ -71,9 +72,8 @@
   gap: 0.7rem;
 }
 
-.controls label {
-  display: grid;
-  gap: 0.2rem;
+.control-field {
+  min-width: 130px;
 }
 
 .table-wrap {
@@ -92,9 +92,12 @@ td {
   vertical-align: top;
 }
 
-td select,
-td input {
+.table-field {
   width: 100%;
+}
+
+.compact-field {
+  margin-bottom: -1.2em;
 }
 
 .flag-select {
@@ -102,15 +105,18 @@ td input {
 }
 
 .flag-green {
-  background: #eeffef;
+  background: #0d2e12;
+  outline: 1px solid #2e7d45;
 }
 
 .flag-yellow {
-  background: #fff9dd;
+  background: #2a1e00;
+  outline: 1px solid #9e7c00;
 }
 
 .flag-red {
-  background: #ffe9e9;
+  background: #2e0a0a;
+  outline: 1px solid #b92f2f;
 }
 
 .availability-list {
@@ -124,6 +130,10 @@ td input {
   gap: 1rem;
   border-bottom: 1px dashed var(--line);
   padding-bottom: 0.35rem;
+}
+
+.availability-select {
+  min-width: 210px;
 }
 
 .member-form {
@@ -150,6 +160,11 @@ td input {
 .danger {
   background: #b92f2f;
   color: white;
+}
+
+button[mat-flat-button].danger {
+  --mdc-filled-button-container-color: #93000a;
+  --mdc-filled-button-label-text-color: #ffdad6;
 }
 
 @media (max-width: 900px) {

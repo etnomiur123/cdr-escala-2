@@ -19,17 +19,18 @@
   </nav>
 
   <section class="panel inner-tabs">
-    <button type="button" [class.active]="activeTab() === 'escala'" (click)="activeTab.set('escala')">
+    <button mat-stroked-button type="button" [class.active]="activeTab() === 'escala'" (click)="activeTab.set('escala')">
       Escala
     </button>
     <button
+      mat-stroked-button
       type="button"
       [class.active]="activeTab() === 'disponibilidade'"
       (click)="activeTab.set('disponibilidade')"
     >
       Disponibilidade
     </button>
-    <button type="button" [class.active]="activeTab() === 'membros'" (click)="activeTab.set('membros')">
+    <button mat-stroked-button type="button" [class.active]="activeTab() === 'membros'" (click)="activeTab.set('membros')">
       Membros
     </button>
   </section>
@@ -37,15 +38,18 @@
   @if (activeTab() === 'escala') {
     <section class="panel controls">
       <h2>Adicionar linha de horario</h2>
-      <label>
-        Dia
-        <input type="number" min="1" max="31" [(ngModel)]="newSlotDay" />
-      </label>
-      <label>
-        Hora
-        <input type="time" [(ngModel)]="newSlotTime" />
-      </label>
-      <button type="button" (click)="addSlot()">Adicionar linha</button>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="control-field">
+        <mat-label>Dia</mat-label>
+        <input matInput type="number" min="1" max="31" [(ngModel)]="newSlotDay" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" subscriptSizing="dynamic" class="control-field">
+        <mat-label>Hora</mat-label>
+        <input matInput type="time" [(ngModel)]="newSlotTime" />
+      </mat-form-field>
+      <button mat-raised-button type="button" (click)="addSlot()">
+        <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+        <span>Adicionar linha</span>
+      </button>
     </section>
 
     <section class="panel table-wrap">
@@ -66,99 +70,124 @@
           @for (slot of slots(); track slot.id) {
             <tr>
               <td>
-                <input
-                  type="date"
-                  [ngModel]="slot.date"
-                  (ngModelChange)="slot.date = $event; saveSlot(slot)"
-                />
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <input
+                    matInput
+                    type="date"
+                    [ngModel]="slot.date"
+                    (ngModelChange)="slot.date = $event; saveSlot(slot)"
+                  />
+                </mat-form-field>
               </td>
               <td>
-                <input
-                  type="text"
-                  [ngModel]="slot.dayOfWeek"
-                  (ngModelChange)="slot.dayOfWeek = $event; saveSlot(slot)"
-                />
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <input
+                    matInput
+                    type="text"
+                    [ngModel]="slot.dayOfWeek"
+                    (ngModelChange)="slot.dayOfWeek = $event; saveSlot(slot)"
+                  />
+                </mat-form-field>
               </td>
               <td>
-                <input type="time" [ngModel]="slot.time" (ngModelChange)="slot.time = $event; saveSlot(slot)" />
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <input
+                    matInput
+                    type="time"
+                    [ngModel]="slot.time"
+                    (ngModelChange)="slot.time = $event; saveSlot(slot)"
+                  />
+                </mat-form-field>
               </td>
 
               <td [class]="flagClass(slot.flags.Vocalista)">
-                <select
-                  [ngModel]="slot.assignments.Vocalista || ''"
-                  (ngModelChange)="setAssignment(slot, 'Vocalista', $event)"
-                >
-                  <option value="">-</option>
-                  @for (member of vocalistas(); track member.id) {
-                    <option [value]="member.name">{{ member.name }}</option>
-                  }
-                </select>
-                <select
-                  class="flag-select"
-                  [ngModel]="slot.flags.Vocalista"
-                  (ngModelChange)="setCellFlag(slot, 'Vocalista', $event)"
-                >
-                  <option value="none">Sem flag</option>
-                  <option value="green">Verde</option>
-                  <option value="yellow">Amarelo</option>
-                  <option value="red">Vermelho</option>
-                </select>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <mat-select
+                    [ngModel]="slot.assignments.Vocalista || ''"
+                    (ngModelChange)="setAssignment(slot, 'Vocalista', $event)"
+                  >
+                    <mat-option value="">-</mat-option>
+                    @for (member of vocalistas(); track member.id) {
+                      <mat-option [value]="member.name">{{ member.name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field flag-select">
+                  <mat-select
+                    [ngModel]="slot.flags.Vocalista"
+                    (ngModelChange)="setCellFlag(slot, 'Vocalista', $event)"
+                  >
+                    <mat-option value="none">Sem flag</mat-option>
+                    <mat-option value="green">Verde</mat-option>
+                    <mat-option value="yellow">Amarelo</mat-option>
+                    <mat-option value="red">Vermelho</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </td>
 
               <td [class]="flagClass(slot.flags.Guitarra)">
-                <select
-                  [ngModel]="slot.assignments.Guitarra || ''"
-                  (ngModelChange)="setAssignment(slot, 'Guitarra', $event)"
-                >
-                  <option value="">-</option>
-                  @for (member of guitarras(); track member.id) {
-                    <option [value]="member.name">{{ member.name }}</option>
-                  }
-                </select>
-                <select
-                  class="flag-select"
-                  [ngModel]="slot.flags.Guitarra"
-                  (ngModelChange)="setCellFlag(slot, 'Guitarra', $event)"
-                >
-                  <option value="none">Sem flag</option>
-                  <option value="green">Verde</option>
-                  <option value="yellow">Amarelo</option>
-                  <option value="red">Vermelho</option>
-                </select>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <mat-select
+                    [ngModel]="slot.assignments.Guitarra || ''"
+                    (ngModelChange)="setAssignment(slot, 'Guitarra', $event)"
+                  >
+                    <mat-option value="">-</mat-option>
+                    @for (member of guitarras(); track member.id) {
+                      <mat-option [value]="member.name">{{ member.name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field flag-select">
+                  <mat-select
+                    [ngModel]="slot.flags.Guitarra"
+                    (ngModelChange)="setCellFlag(slot, 'Guitarra', $event)"
+                  >
+                    <mat-option value="none">Sem flag</mat-option>
+                    <mat-option value="green">Verde</mat-option>
+                    <mat-option value="yellow">Amarelo</mat-option>
+                    <mat-option value="red">Vermelho</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </td>
 
               <td [class]="flagClass(slot.flags.Viola)">
-                <select
-                  [ngModel]="slot.assignments.Viola || ''"
-                  (ngModelChange)="setAssignment(slot, 'Viola', $event)"
-                >
-                  <option value="">-</option>
-                  @for (member of violas(); track member.id) {
-                    <option [value]="member.name">{{ member.name }}</option>
-                  }
-                </select>
-                <select
-                  class="flag-select"
-                  [ngModel]="slot.flags.Viola"
-                  (ngModelChange)="setCellFlag(slot, 'Viola', $event)"
-                >
-                  <option value="none">Sem flag</option>
-                  <option value="green">Verde</option>
-                  <option value="yellow">Amarelo</option>
-                  <option value="red">Vermelho</option>
-                </select>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <mat-select
+                    [ngModel]="slot.assignments.Viola || ''"
+                    (ngModelChange)="setAssignment(slot, 'Viola', $event)"
+                  >
+                    <mat-option value="">-</mat-option>
+                    @for (member of violas(); track member.id) {
+                      <mat-option [value]="member.name">{{ member.name }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field flag-select">
+                  <mat-select
+                    [ngModel]="slot.flags.Viola"
+                    (ngModelChange)="setCellFlag(slot, 'Viola', $event)"
+                  >
+                    <mat-option value="none">Sem flag</mat-option>
+                    <mat-option value="green">Verde</mat-option>
+                    <mat-option value="yellow">Amarelo</mat-option>
+                    <mat-option value="red">Vermelho</mat-option>
+                  </mat-select>
+                </mat-form-field>
               </td>
 
               <td>
-                <input
-                  type="text"
-                  [ngModel]="slot.notes"
-                  (ngModelChange)="slot.notes = $event; saveSlot(slot)"
-                  placeholder="Observacoes"
-                />
+                <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
+                  <mat-label>Observacoes</mat-label>
+                  <input
+                    matInput
+                    type="text"
+                    [ngModel]="slot.notes"
+                    (ngModelChange)="slot.notes = $event; saveSlot(slot)"
+                  />
+                </mat-form-field>
               </td>
               <td>
-                <button type="button" class="danger" (click)="deleteSlot(slot.id)">Apagar</button>
+                <button mat-flat-button type="button" class="danger" (click)="deleteSlot(slot.id)">Apagar</button>
               </td>
             </tr>
           } @empty {
@@ -181,15 +210,18 @@
           @for (slot of slots(); track slot.id) {
             <div class="availability-row">
               <span>{{ slot.date }} {{ slot.time }}</span>
-              <select
-                [ngModel]="userAvailability().responses[slot.id] || ''"
-                (ngModelChange)="saveAvailability(slot.id, $event)"
-              >
-                <option value="">Selecionar</option>
-                <option value="yes">Sim</option>
-                <option value="no">Nao</option>
-                <option value="if-needed">Se necessario</option>
-              </select>
+              <mat-form-field appearance="outline" subscriptSizing="dynamic" class="availability-select">
+                <mat-label>Resposta</mat-label>
+                <mat-select
+                  [ngModel]="userAvailability().responses[slot.id] || ''"
+                  (ngModelChange)="saveAvailability(slot.id, $event)"
+                >
+                  <mat-option value="">Selecionar</mat-option>
+                  <mat-option value="yes">Sim</mat-option>
+                  <mat-option value="no">Nao</mat-option>
+                  <mat-option value="if-needed">Se necessario</mat-option>
+                </mat-select>
+              </mat-form-field>
             </div>
           }
         </div>
@@ -201,17 +233,11 @@
 
   @if (activeTab() === 'membros') {
     <section class="panel members">
-      <h2>Adicionar e editar membros</h2>
-      <div class="member-form">
-        <input [(ngModel)]="newMemberName" placeholder="Nome" />
-        <select [(ngModel)]="newMemberNaipe">
-          <option value="Vocalista">Vocalista</option>
-          <option value="Guitarra">Guitarra</option>
-          <option value="Viola">Viola</option>
-        </select>
-        <input [(ngModel)]="newMemberEmail" placeholder="Email (opcional)" />
-        <button type="button" (click)="addMember()">Adicionar</button>
-      </div>
+      <h2>Membros do cliente</h2>
+      <p>
+        A gestao de musicos foi movida para a secao de
+        <a [routerLink]="['/administracao']">Administracao</a>.
+      </p>
 
       <div class="members-list">
         @for (member of members(); track member.id) {
@@ -219,9 +245,6 @@
             <strong>{{ member.name }}</strong>
             <span>{{ member.naipe }}</span>
             <small>{{ member.email || 'Sem email' }}</small>
-            <button type="button" class="ghost" (click)="toggleMemberActive(member.id, member.active)">
-              {{ member.active ? 'Desativar' : 'Ativar' }}
-            </button>
           </article>
         }
       </div>

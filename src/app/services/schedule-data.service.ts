@@ -7,7 +7,9 @@ import {
   deleteDoc,
   doc,
   docData,
+  getDocs,
   setDoc,
+  writeBatch,
   updateDoc
 } from '@angular/fire/firestore';
 import { combineLatest, map, of, switchMap } from 'rxjs';
@@ -40,6 +42,24 @@ export class ScheduleDataService {
       name,
       createdAt: Date.now()
     });
+  }
+
+  async deleteClient(clientId: string): Promise<void> {
+    const monthsRef = collection(this.firestore, `clients/${clientId}/months`);
+    const monthsSnapshot = await getDocs(monthsRef);
+
+    for (const monthDoc of monthsSnapshot.docs) {
+      const monthBasePath = `clients/${clientId}/months/${monthDoc.id}`;
+      await this.deleteCollectionDocs(`${monthBasePath}/slots`);
+      await this.deleteCollectionDocs(`${monthBasePath}/availabilities`);
+      await deleteDoc(monthDoc.ref);
+    }
+
+    // Legacy path from earlier model versions where members were nested under each client.
+    await this.deleteCollectionDocs(`clients/${clientId}/members`);
+
+    const clientRef = doc(this.firestore, `clients/${clientId}`);
+    await deleteDoc(clientRef);
   }
 
   observeMonths(clientId: string) {
@@ -163,15 +183,15 @@ export class ScheduleDataService {
     await deleteDoc(slotRef);
   }
 
-  observeMembers(clientId: string) {
-    const membersRef = collection(this.firestore, `clients/${clientId}/members`);
+  observeAppMembers() {
+    const membersRef = collection(this.firestore, 'members');
     return collectionData(membersRef, { idField: 'id' }).pipe(
       map((items) => (items as Member[]).sort((a, b) => a.name.localeCompare(b.name)))
     );
   }
 
-  async addMember(clientId: string, member: Omit<Member, 'id' | 'createdAt' | 'updatedAt'>) {
-    const membersRef = collection(this.firestore, `clients/${clientId}/members`);
+  async addMember(member: Omit<Member, 'id' | 'createdAt' | 'updatedAt'>) {
+    const membersRef = collection(this.firestore, 'members');
     await addDoc(membersRef, {
       ...member,
       createdAt: Date.now(),
@@ -179,12 +199,9 @@ export class ScheduleDataService {
     });
   }
 
-  async updateMember(clientId: string, memberId: string, changes: Partial<Member>) {
-    const memberRef = doc(this.firestore, `clients/${clientId}/members/${memberId}`);
-    await updateDoc(memberRef, {
-      ...changes,
-      updatedAt: Date.now()
-    });
+  async deleteMember(memberId: string): Promise<void> {
+    const memberRef = doc(this.firestore, `members/${memberId}`);
+    await deleteDoc(memberRef);
   }
 
   observeUserProfile(uid: string) {
@@ -299,5 +316,23 @@ export class ScheduleDataService {
 
   private formatDayOfWeek(date: Date): string {
     return date.toLocaleDateString('pt-PT', { weekday: 'long' });
+  }
+
+  private async deleteCollectionDocs(collectionPath: string): Promise<void> {
+    const collectionRef = collection(this.firestore, collectionPath);
+    let snapshot = await getDocs(collectionRef);
+
+    while (!snapshot.empty) {
+      for (let i = 0; i < snapshot.docs.length; i += 500) {
+        const docsChunk = snapshot.docs.slice(i, i + 500);
+        const batch = writeBatch(this.firestore);
+        for (const item of docsChunk) {
+          batch.delete(item.ref);
+        }
+        await batch.commit();
+      }
+
+      snapshot = await getDocs(collectionRef);
+    }
   }
 }

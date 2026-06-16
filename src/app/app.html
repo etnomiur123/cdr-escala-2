@@ -3,6 +3,14 @@
     <div class="brand">
       <p class="eyebrow">Escala de Musicos</p>
       <h1>Canto do Rio Planner</h1>
+      <nav class="topbar-nav" aria-label="Navegacao principal">
+        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+          Escalas
+        </a>
+        @if (auth.isLoggedIn()) {
+          <a routerLink="/administracao" routerLinkActive="active">Administracao</a>
+        }
+      </nav>
     </div>
 
     <div class="auth-box">
@@ -11,35 +19,29 @@
           Sessao: <strong>{{ auth.user()?.displayName || auth.user()?.email }}</strong>
         </p>
 
-        <label>
-          Naipe
-          <select
-            [ngModel]="profile()?.naipe || ''"
-            (ngModelChange)="setNaipe($event)"
-          >
-            <option value="">Selecionar</option>
-            <option value="Vocalista">Voz</option>
-            <option value="Guitarra">Guitarra Portuguesa</option>
-            <option value="Viola">Viola</option>
-          </select>
-        </label>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Naipe</mat-label>
+          <mat-select [ngModel]="profile()?.naipe || ''" (ngModelChange)="setNaipe($event)">
+            <mat-option value="">Selecionar</mat-option>
+            <mat-option value="Vocalista">Voz</mat-option>
+            <mat-option value="Guitarra">Guitarra Portuguesa</mat-option>
+            <mat-option value="Viola">Viola</mat-option>
+          </mat-select>
+        </mat-form-field>
 
         <button
+          mat-icon-button
           type="button"
-          class="ghost icon-button"
+          class="logout-button"
           aria-label="Sair da sessao"
           title="Sair"
           (click)="auth.logout()"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path
-              d="M10 17v-2h4V9h-4V7h6v10h-6Zm-2 4c-.55 0-1.02-.2-1.42-.6-.4-.4-.6-.87-.6-1.4V5c0-.55.2-1.02.6-1.42.4-.4.87-.6 1.42-.6h6v2H8v14h6v2H8Zm11.15-8-2.8 2.8-1.4-1.4L15.35 13H11v-2h4.35l-1.4-1.4 1.4-1.4 2.8 2.8c.2.2.3.43.3.7s-.1.5-.3.7Z"
-            />
-          </svg>
+          <mat-icon aria-hidden="true" svgIcon="logout"></mat-icon>
         </button>
       } @else {
         <p>Entra com Google para gerir escalas e responder disponibilidades.</p>
-        <button type="button" (click)="auth.loginWithGoogle()">Entrar com Google</button>
+        <button mat-raised-button type="button" (click)="auth.loginWithGoogle()">Entrar com Google</button>
       }
     </div>
   </header>

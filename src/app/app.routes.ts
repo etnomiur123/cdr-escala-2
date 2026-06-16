@@ -1,14 +1,27 @@
-import { Routes } from '@angular/router';
-import { HomePageComponent } from './pages/home-page.component';
-import { MonthPageComponent } from './pages/month-page.component';
+import { inject } from '@angular/core';
+import { CanActivateFn, Router, Routes } from '@angular/router';
+import { AdminPageComponent } from './pages/admin-page.component';
+import { AuthService } from './services/auth.service';
+
+const adminGuard: CanActivateFn = () => {
+	const auth = inject(AuthService);
+	return auth.isLoggedIn() || inject(Router).createUrlTree(['/']);
+};
 
 export const routes: Routes = [
 	{
 		path: '',
-		component: HomePageComponent
+		loadComponent: () =>
+			import('./pages/home-page.component').then((module) => module.HomePageComponent)
+	},
+	{
+		path: 'administracao',
+		canActivate: [adminGuard],
+		component: AdminPageComponent
 	},
 	{
 		path: 'cliente/:clientId/mes/:monthId',
-		component: MonthPageComponent
+		loadComponent: () =>
+			import('./pages/month-page.component').then((module) => module.MonthPageComponent)
 	}
 ];
