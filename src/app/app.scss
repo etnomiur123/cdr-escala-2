@@ -35,27 +35,21 @@
 	font-size: 1.7rem;
 }
 
-.topbar-nav {
-	margin-top: 0.75rem;
-	display: flex;
-	gap: 0.65rem;
-	flex-wrap: wrap;
-}
-
-.topbar-nav a {
-	text-decoration: none;
-	padding: 0.35rem 0.75rem;
-	border-radius: 999px;
+.page-nav {
+	border-radius: 14px;
+	background: var(--panel-bg);
 	border: 1px solid var(--line);
-	color: var(--text);
-	background: transparent;
-	font-weight: 600;
+	padding: 0 0.5rem;
+	--mat-tab-header-active-label-text-color: #abc7ff;
+	--mat-tab-header-active-indicator-color: #abc7ff;
+	--mat-tab-header-inactive-label-text-color: var(--muted);
+	--mat-tab-header-inactive-hover-label-text-color: var(--text);
+	--mat-tab-header-divider-color: transparent;
+	--mat-tab-header-pagination-icon-color: var(--muted);
 }
 
-.topbar-nav a.active {
-	background: #abc7ff;
-	color: #00315e;
-	border-color: #abc7ff;
+.page-content {
+	display: block;
 }
 
 .auth-box {

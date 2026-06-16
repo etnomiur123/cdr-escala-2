@@ -11,17 +11,24 @@ const adminGuard: CanActivateFn = () => {
 export const routes: Routes = [
 	{
 		path: '',
+		redirectTo: 'escalas',
+		pathMatch: 'full'
+	},
+	{
+		path: 'escalas',
 		loadComponent: () =>
-			import('./pages/home-page.component').then((module) => module.HomePageComponent)
+			import('./pages/home-page.component').then((module) => module.HomePageComponent),
+		children: [
+			{
+				path: 'cliente/:clientId/mes/:monthId',
+				loadComponent: () =>
+					import('./pages/month-page.component').then((module) => module.MonthPageComponent)
+			}
+		]
 	},
 	{
 		path: 'administracao',
 		canActivate: [adminGuard],
 		component: AdminPageComponent
-	},
-	{
-		path: 'cliente/:clientId/mes/:monthId',
-		loadComponent: () =>
-			import('./pages/month-page.component').then((module) => module.MonthPageComponent)
 	}
 ];

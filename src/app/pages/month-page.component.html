@@ -10,7 +10,7 @@
   <nav class="month-tabs">
     @for (item of allMonths(); track item.id) {
       <a
-        [routerLink]="['/cliente', clientId(), 'mes', item.id]"
+        [routerLink]="['cliente', clientId(), 'mes', item.id]"
         [class.active]="item.id === monthId()"
       >
         {{ item.label }}

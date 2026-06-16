@@ -3,14 +3,6 @@
     <div class="brand">
       <p class="eyebrow">Escala de Musicos</p>
       <h1>Canto do Rio Planner</h1>
-      <nav class="topbar-nav" aria-label="Navegacao principal">
-        <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          Escalas
-        </a>
-        @if (auth.isLoggedIn()) {
-          <a routerLink="/administracao" routerLinkActive="active">Administracao</a>
-        }
-      </nav>
     </div>
 
     <div class="auth-box">
@@ -46,5 +38,24 @@
     </div>
   </header>
 
-  <router-outlet></router-outlet>
+  <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="page-nav" aria-label="Navegacao principal">
+    <a mat-tab-link
+      routerLink="/escalas"
+      routerLinkActive
+      #rlaHome="routerLinkActive"
+      [active]="rlaHome.isActive"
+    >Escalas</a>
+    @if (auth.isLoggedIn()) {
+      <a mat-tab-link
+        routerLink="/administracao"
+        routerLinkActive
+        #rlaAdmin="routerLinkActive"
+        [active]="rlaAdmin.isActive"
+      >Administracao</a>
+    }
+  </nav>
+
+  <mat-tab-nav-panel #tabPanel class="page-content">
+    <router-outlet></router-outlet>
+  </mat-tab-nav-panel>
 </main>
