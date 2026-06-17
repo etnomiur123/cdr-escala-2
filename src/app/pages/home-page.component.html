@@ -1,7 +1,7 @@
 <section class="page-shell">
   <header class="hero">
     <h1>Painel de Escalas</h1>
-    <p>Cada linha representa um mes com o estado das disponibilidades.</p>
+    <p>Cada linha representa um mês com o estado das disponibilidades.</p>
   </header>
 
   <section class="panel form-grid">
@@ -17,18 +17,18 @@
 
   @if (selectedClientId()) {
     <section class="panel form-grid month-create">
-      <h2>Criar mes</h2>
+      <h2>Criar mês</h2>
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-field small-field">
         <mat-label>Ano</mat-label>
         <input matInput type="number" [(ngModel)]="newMonthYear" />
       </mat-form-field>
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="field-field small-field">
-        <mat-label>Mes</mat-label>
+        <mat-label>Mês</mat-label>
         <input matInput type="number" min="1" max="12" [(ngModel)]="newMonthMonth" />
       </mat-form-field>
       <button mat-raised-button type="button" (click)="createMonth()">
         <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
-        <span>Adicionar mes</span>
+        <span>Adicionar mês</span>
       </button>
     </section>
 
@@ -36,10 +36,10 @@
       <table>
         <thead>
           <tr>
-            <th>Mes</th>
+            <th>Mês</th>
             <th>Estado das disponibilidades</th>
-            <th>Linhas de horario</th>
-            <th>Acoes</th>
+            <th>Linhas de horário</th>
+            <th>Ações</th>
           </tr>
         </thead>
         <tbody>
@@ -66,13 +66,13 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="4">Ainda nao existem meses para este cliente.</td>
+              <td colspan="4">Ainda não existem meses para este cliente.</td>
             </tr>
           }
         </tbody>
       </table>
     </section>
   } @else {
-    <section class="panel empty-state">Ainda nao existem clientes. Usa a secao Administracao para criar o primeiro.</section>
+    <section class="panel empty-state">Ainda não existem clientes. Usa a secção Administração para criar o primeiro.</section>
   }
 </section>

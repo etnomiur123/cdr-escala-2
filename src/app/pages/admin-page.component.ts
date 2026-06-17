@@ -93,7 +93,7 @@ export class AdminPageComponent {
       this.newClientName = '';
     } catch {
       this.clientErrorMessage =
-        'Sem permissao para criar cliente. Verifica regras Firestore e autenticacao.';
+        'Sem permissão para criar cliente. Verifica regras Firestore e autenticação.';
     }
   }
 
@@ -117,7 +117,7 @@ export class AdminPageComponent {
       this.newMemberEmail = '';
     } catch {
       this.memberErrorMessage =
-        'Sem permissao para adicionar membro. Verifica regras Firestore e autenticacao.';
+        'Sem permissão para adicionar membro. Verifica regras Firestore e autenticação.';
     }
   }
 
@@ -126,7 +126,7 @@ export class AdminPageComponent {
       await this.data.deleteClient(clientId);
     } catch {
       this.clientErrorMessage =
-        'Sem permissao para remover cliente. Verifica regras Firestore e autenticacao.';
+        'Sem permissão para remover cliente. Verifica regras Firestore e autenticação.';
     }
   }
 
@@ -135,7 +135,7 @@ export class AdminPageComponent {
       await this.data.deleteMember(memberId);
     } catch {
       this.memberErrorMessage =
-        'Sem permissao para remover membro. Verifica regras Firestore e autenticacao.';
+        'Sem permissão para remover membro. Verifica regras Firestore e autenticação.';
     }
   }
 

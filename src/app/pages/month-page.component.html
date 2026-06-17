@@ -1,8 +1,8 @@
 <section class="page-shell">
   <header class="hero">
     <div>
-      <h1>{{ month()?.label || 'Mes' }}</h1>
-      <p>Estrutura inspirada na tua folha: multiplas linhas por dia e 1 musico por naipe.</p>
+      <h1>{{ month()?.label || 'Mês' }}</h1>
+      <p>Estrutura inspirada na tua folha: múltiplas linhas por dia e 1 músico por naipe.</p>
     </div>
     <a class="ghost-link" [routerLink]="['/']">Voltar ao painel</a>
   </header>
@@ -37,7 +37,7 @@
 
   @if (activeTab() === 'escala') {
     <section class="panel controls">
-      <h2>Adicionar linha de horario</h2>
+      <h2>Adicionar linha de horário</h2>
       <mat-form-field appearance="outline" subscriptSizing="dynamic" class="control-field">
         <mat-label>Dia</mat-label>
         <input matInput type="number" min="1" max="31" [(ngModel)]="newSlotDay" />
@@ -62,7 +62,7 @@
             <th>Vocalista</th>
             <th>Guitarra</th>
             <th>Viola</th>
-            <th>Observacoes</th>
+            <th>Observações</th>
             <th></th>
           </tr>
         </thead>
@@ -177,7 +177,7 @@
 
               <td>
                 <mat-form-field appearance="outline" subscriptSizing="dynamic" class="table-field compact-field">
-                  <mat-label>Observacoes</mat-label>
+                  <mat-label>Observações</mat-label>
                   <input
                     matInput
                     type="text"
@@ -192,7 +192,7 @@
             </tr>
           } @empty {
             <tr>
-              <td colspan="8">Sem linhas de horario neste mes.</td>
+              <td colspan="8">Sem linhas de horário neste mês.</td>
             </tr>
           }
         </tbody>
@@ -203,8 +203,8 @@
   @if (activeTab() === 'disponibilidade') {
     <section class="panel availability">
       @if (auth.isLoggedIn()) {
-        <h2>Formulario de disponibilidade ({{ profile()?.naipe || 'Naipe por definir' }})</h2>
-        <p>Resposta por horario: Sim / Nao / Se necessario.</p>
+        <h2>Formulário de disponibilidade ({{ profile()?.naipe || 'Naipe por definir' }})</h2>
+        <p>Resposta por horário: Sim / Não / Se necessário.</p>
 
         <div class="availability-list">
           @for (slot of slots(); track slot.id) {
@@ -218,8 +218,8 @@
                 >
                   <mat-option value="">Selecionar</mat-option>
                   <mat-option value="yes">Sim</mat-option>
-                  <mat-option value="no">Nao</mat-option>
-                  <mat-option value="if-needed">Se necessario</mat-option>
+                  <mat-option value="no">Não</mat-option>
+                  <mat-option value="if-needed">Se necessário</mat-option>
                 </mat-select>
               </mat-form-field>
             </div>
@@ -235,8 +235,8 @@
     <section class="panel members">
       <h2>Membros do cliente</h2>
       <p>
-        A gestao de musicos foi movida para a secao de
-        <a [routerLink]="['/administracao']">Administracao</a>.
+        A gestão de músicos foi movida para a secção de
+        <a [routerLink]="['/administracao']">Administração</a>.
       </p>
 
       <div class="members-list">

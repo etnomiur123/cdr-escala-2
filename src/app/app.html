@@ -1,20 +1,20 @@
 @if (auth.isAuthLoading()) {
   <section class="app-loading" aria-live="polite" aria-busy="true">
     <mat-spinner diameter="56"></mat-spinner>
-    <p>A carregar aplicacao...</p>
+    <p>A carregar aplicação...</p>
   </section>
 } @else {
   <main class="app-shell">
     <header class="topbar">
       <div class="brand">
-        <p class="eyebrow">Escala de Musicos</p>
+        <p class="eyebrow">Escala de Músicos</p>
         <h1>Canto do Rio Planner</h1>
       </div>
 
       <div class="auth-box">
         @if (auth.isLoggedIn()) {
           <p>
-            Sessao: <strong>{{ auth.user()?.displayName || auth.user()?.email }}</strong>
+            Sessão: <strong>{{ auth.user()?.displayName || auth.user()?.email }}</strong>
           </p>
 
           <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -31,7 +31,7 @@
             mat-icon-button
             type="button"
             class="logout-button"
-            aria-label="Sair da sessao"
+            aria-label="Sair da sessão"
             title="Sair"
             (click)="auth.logout()"
           >
@@ -44,7 +44,7 @@
       </div>
     </header>
 
-    <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="page-nav" aria-label="Navegacao principal">
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="page-nav" aria-label="Navegação principal">
       <a mat-tab-link
         routerLink="/escalas"
         routerLinkActive
@@ -57,7 +57,7 @@
           routerLinkActive
           #rlaAdmin="routerLinkActive"
           [active]="rlaAdmin.isActive"
-        >Administracao</a>
+        >Administração</a>
       }
     </nav>
 

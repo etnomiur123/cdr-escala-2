@@ -1,7 +1,7 @@
 <section class="page-shell">
   <header class="hero">
-    <h1>Administracao</h1>
-    <p>Gere clientes e o catalogo global de musicos da aplicacao.</p>
+    <h1>Administração</h1>
+    <p>Gere clientes e o catálogo global de músicos da aplicação.</p>
   </header>
 
   <section class="panel clients-panel">
@@ -44,7 +44,7 @@
         }
       </div>
     } @else {
-      <p class="empty-state">Ainda nao existem clientes.</p>
+      <p class="empty-state">Ainda não existem clientes.</p>
     }
 
     @if (clientErrorMessage) {
@@ -55,7 +55,7 @@
   <section class="panel client-summary-panel">
     <div class="summary-header">
       <h2>Resumo de clientes</h2>
-      <p>Total de musicos ativos na aplicacao: <strong>{{ totalActiveMusicians() }}</strong></p>
+      <p>Total de músicos ativos na aplicação: <strong>{{ totalActiveMusicians() }}</strong></p>
     </div>
 
     @if (clientSummaries().length) {
@@ -98,13 +98,13 @@
         }
       </div>
     } @else {
-      <p class="empty-state">Ainda nao existem clientes para resumir.</p>
+      <p class="empty-state">Ainda não existem clientes para resumir.</p>
     }
   </section>
 
   <section class="panel members-admin">
-    <h2>Painel de musicos da aplicacao</h2>
-    <p>Os musicos adicionados aqui ficam disponiveis para todos os clientes.</p>
+    <h2>Painel de músicos da aplicação</h2>
+    <p>Os músicos adicionados aqui ficam disponíveis para todos os clientes.</p>
 
     <div class="member-form">
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
@@ -127,8 +127,8 @@
         mat-mini-fab
         type="button"
         class="add-fab"
-        aria-label="Adicionar musico"
-        title="Adicionar musico"
+        aria-label="Adicionar músico"
+        title="Adicionar músico"
         (click)="addMember()"
         (contextmenu)="$event.preventDefault(); addMember()"
       >
@@ -157,7 +157,7 @@
           </button>
         </article>
       } @empty {
-        <p class="empty-state">Ainda nao existem musicos registados na aplicacao.</p>
+        <p class="empty-state">Ainda não existem músicos registados na aplicação.</p>
       }
     </div>
   </section>
