@@ -47,17 +47,19 @@
       @if (mode() === 'edit') {
         <mat-icon aria-hidden="true">check</mat-icon>
       } @else {
-        <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+        <mat-icon aria-hidden="true">add</mat-icon>
       }
     </button>
 
     @if (mode() === 'edit') {
       <button
-        mat-stroked-button
+        mat-icon-button
         type="button"
+        aria-label="Cancelar edição do membro"
+        title="Cancelar"
         (click)="cancel()"
       >
-        Cancelar
+        <mat-icon aria-hidden="true">close</mat-icon>
       </button>
     }
   </div>

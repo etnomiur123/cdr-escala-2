@@ -11,7 +11,6 @@ import { FormsModule } from '@angular/forms';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { of, switchMap } from 'rxjs';
 import { Naipe } from './models/schedule.models';
-import { AppIconService } from './services/app-icon.service';
 import { AuthService } from './services/auth.service';
 import { ScheduleDataService } from './services/schedule-data.service';
 
@@ -36,7 +35,6 @@ import { ScheduleDataService } from './services/schedule-data.service';
 export class App {
   readonly auth = inject(AuthService);
   private readonly data = inject(ScheduleDataService);
-  private readonly appIcons = inject(AppIconService);
 
   readonly profile = toSignal(
     toObservable(computed(() => this.auth.user()?.uid ?? '')).pipe(

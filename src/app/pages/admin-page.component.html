@@ -19,7 +19,7 @@
             title="Remover cliente"
             (click)="deleteClient(client.id)"
           >
-            <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+            <mat-icon aria-hidden="true">delete</mat-icon>
           </button>
         </article>
       }
@@ -38,7 +38,7 @@
           (click)="createClient()"
           (contextmenu)="$event.preventDefault(); createClient()"
         >
-          <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+          <mat-icon aria-hidden="true">add</mat-icon>
         </button>
       </article>
 
@@ -86,7 +86,7 @@
                       title="Remover musico"
                       (click)="deleteMember(member.id)"
                     >
-                        <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+                      <mat-icon aria-hidden="true">delete</mat-icon>
                     </button>
                   </li>
                 }
@@ -126,11 +126,13 @@
             <small>{{ member.email || 'Sem email' }}</small>
             <div class="member-row-actions">
               <button
-                mat-stroked-button
+                mat-icon-button
                 type="button"
+                aria-label="Editar membro"
+                title="Editar"
                 (click)="startEditMember(member)"
               >
-                Editar
+                <mat-icon aria-hidden="true">edit</mat-icon>
               </button>
               <button
                 mat-icon-button
@@ -139,7 +141,7 @@
                 title="Remover músico"
                 (click)="deleteMember(member.id)"
               >
-                <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+                <mat-icon aria-hidden="true">delete</mat-icon>
               </button>
             </div>
           </article>

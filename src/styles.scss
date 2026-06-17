@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL,GRAD,opsz,wght@0,0,24,400');
 
 // Azure-blue dark theme (M3 Design System)
 html {
@@ -70,4 +71,25 @@ a {
 
 :where(button:not(.mat-mdc-button-base)):hover {
   filter: brightness(1.08);
+}
+
+/* Use Google Material Symbols as the default Angular Material icon font. */
+.mat-icon.material-icons {
+  font-family: 'Material Symbols Outlined';
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
 }
