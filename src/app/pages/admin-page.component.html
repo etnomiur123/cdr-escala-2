@@ -106,50 +106,6 @@
     <h2>Painel de músicos da aplicação</h2>
     <p>Os músicos adicionados aqui ficam disponíveis para todos os clientes.</p>
 
-    <div class="member-form">
-      <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Nome</mat-label>
-        <input matInput [(ngModel)]="newMemberName" />
-      </mat-form-field>
-      <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Naipe</mat-label>
-        <mat-select [(ngModel)]="newMemberNaipe" >
-          <mat-option value="Vocalista">Vocalista</mat-option>
-          <mat-option value="Guitarra">Guitarra</mat-option>
-          <mat-option value="Viola">Viola</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field appearance="outline" subscriptSizing="dynamic">
-        <mat-label>Email (opcional)</mat-label>
-        <input
-          matInput
-          type="email"
-          inputmode="email"
-          autocomplete="email"
-          spellcheck="false"
-          placeholder="nome@dominio.pt"
-          [pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'"
-          [ngModel]="newMemberEmail"
-          (ngModelChange)="updateEmailMask($event)"
-          #memberEmailModel="ngModel"
-        />
-        @if (memberEmailModel.invalid && (memberEmailModel.dirty || memberEmailModel.touched)) {
-          <mat-error>Email inválido. Usa o formato nome@dominio.pt.</mat-error>
-        }
-      </mat-form-field>
-      <button
-        mat-mini-fab
-        type="button"
-        class="add-fab"
-        aria-label="Adicionar músico"
-        title="Adicionar músico"
-        (click)="addMember()"
-        (contextmenu)="$event.preventDefault(); addMember()"
-      >
-        <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
-      </button>
-    </div>
-
     @if (memberErrorMessage) {
       <p class="error">{{ memberErrorMessage }}</p>
     }
@@ -170,7 +126,53 @@
             <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
           </button>
         </article>
-      } @empty {
+      }
+
+      <article class="member-create-row">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Nome</mat-label>
+          <input matInput [(ngModel)]="newMemberName" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Naipe</mat-label>
+          <mat-select [(ngModel)]="newMemberNaipe">
+            <mat-option value="Vocalista">Vocalista</mat-option>
+            <mat-option value="Guitarra">Guitarra</mat-option>
+            <mat-option value="Viola">Viola</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Email (opcional)</mat-label>
+          <input
+            matInput
+            type="email"
+            inputmode="email"
+            autocomplete="email"
+            spellcheck="false"
+            placeholder="nome@dominio.pt"
+            [pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'"
+            [ngModel]="newMemberEmail"
+            (ngModelChange)="updateEmailMask($event)"
+            #memberEmailModel="ngModel"
+          />
+          @if (memberEmailModel.invalid && (memberEmailModel.dirty || memberEmailModel.touched)) {
+            <mat-error>Email inválido. Usa o formato nome@dominio.pt.</mat-error>
+          }
+        </mat-form-field>
+        <button
+          mat-mini-fab
+          type="button"
+          class="add-fab"
+          aria-label="Adicionar músico"
+          title="Adicionar músico"
+          (click)="addMember()"
+          (contextmenu)="$event.preventDefault(); addMember()"
+        >
+          <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+        </button>
+      </article>
+
+      @if (!appMembers().length) {
         <p class="empty-state">Ainda não existem músicos registados na aplicação.</p>
       }
     </div>
