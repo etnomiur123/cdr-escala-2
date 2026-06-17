@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { of, switchMap } from 'rxjs';
+import { MemberFormRowComponent, MemberFormValue } from '../components/member-form-row.component';
 import { Member, Naipe } from '../models/schedule.models';
 import { AuthService } from '../services/auth.service';
 import { ScheduleDataService } from '../services/schedule-data.service';
@@ -34,7 +35,8 @@ interface ClientSummary {
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule
+    MatSelectModule,
+    MemberFormRowComponent
   ],
   templateUrl: './admin-page.component.html',
   styleUrl: './admin-page.component.scss'
@@ -43,6 +45,8 @@ export class AdminPageComponent {
   private readonly data = inject(ScheduleDataService);
   private readonly auth = inject(AuthService);
   private readonly emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+
+  readonly editingMemberId = signal<string | null>(null);
 
   readonly clients = toSignal(
     toObservable(this.auth.isLoggedIn).pipe(
@@ -71,10 +75,6 @@ export class AdminPageComponent {
   clientErrorMessage = '';
   memberErrorMessage = '';
 
-  newMemberName = '';
-  newMemberNaipe: Naipe = 'Vocalista';
-  newMemberEmail = '';
-
   constructor() {
     effect(() => {
       this.clients();
@@ -98,15 +98,15 @@ export class AdminPageComponent {
     }
   }
 
-  async addMember() {
+  async addMember(value: MemberFormValue) {
     this.memberErrorMessage = '';
 
-    const name = this.newMemberName.trim();
+    const name = value.name.trim();
     if (!name) {
       return;
     }
 
-    const email = this.maskEmail(this.newMemberEmail);
+    const email = this.maskEmail(value.email);
     if (email && !this.emailRegex.test(email)) {
       this.memberErrorMessage = 'Email inválido. Usa o formato nome@dominio.pt.';
       return;
@@ -115,16 +115,51 @@ export class AdminPageComponent {
     try {
       await this.data.addMember({
         name,
-        naipe: this.newMemberNaipe,
+        naipe: value.naipe,
         email: email || undefined,
         active: true
       });
-
-      this.newMemberName = '';
-      this.newMemberEmail = '';
     } catch {
       this.memberErrorMessage =
         'Sem permissão para adicionar membro. Verifica regras Firestore e autenticação.';
+    }
+  }
+
+  startEditMember(member: Member) {
+    this.memberErrorMessage = '';
+    this.editingMemberId.set(member.id);
+  }
+
+  cancelEditMember() {
+    this.editingMemberId.set(null);
+    this.memberErrorMessage = '';
+  }
+
+  async saveMemberEdit(memberId: string, value: MemberFormValue) {
+    this.memberErrorMessage = '';
+
+    const name = value.name.trim();
+    if (!name) {
+      this.memberErrorMessage = 'Nome é obrigatório.';
+      return;
+    }
+
+    const email = this.maskEmail(value.email);
+    if (email && !this.emailRegex.test(email)) {
+      this.memberErrorMessage = 'Email inválido. Usa o formato nome@dominio.pt.';
+      return;
+    }
+
+    try {
+      await this.data.updateMember(memberId, {
+        name,
+        naipe: value.naipe,
+        email: email || undefined
+      });
+      this.editingMemberId.set(null);
+    } catch {
+      this.memberErrorMessage =
+        'Sem permissão para editar membro. Verifica regras Firestore e autenticação.';
     }
   }
 
@@ -144,10 +179,6 @@ export class AdminPageComponent {
       this.memberErrorMessage =
         'Sem permissão para remover membro. Verifica regras Firestore e autenticação.';
     }
-  }
-
-  updateEmailMask(value: string) {
-    this.newMemberEmail = this.maskEmail(value);
   }
 
   private maskEmail(value: string): string {

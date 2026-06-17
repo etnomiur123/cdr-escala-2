@@ -4,6 +4,7 @@ import {
   addDoc,
   collection,
   collectionData,
+  deleteField,
   deleteDoc,
   doc,
   docData,
@@ -202,6 +203,16 @@ export class ScheduleDataService {
   async deleteMember(memberId: string): Promise<void> {
     const memberRef = doc(this.firestore, `members/${memberId}`);
     await deleteDoc(memberRef);
+  }
+
+  async updateMember(memberId: string, changes: Pick<Member, 'name' | 'naipe'> & { email?: string }) {
+    const memberRef = doc(this.firestore, `members/${memberId}`);
+    await updateDoc(memberRef, {
+      name: changes.name,
+      naipe: changes.naipe,
+      email: changes.email || deleteField(),
+      updatedAt: Date.now()
+    });
   }
 
   observeUserProfile(uid: string) {

@@ -112,65 +112,44 @@
 
     <div class="members-list">
       @for (member of appMembers(); track member.id) {
-        <article>
-          <strong>{{ member.name }}</strong>
-          <span>{{ member.naipe }}</span>
-          <small>{{ member.email || 'Sem email' }}</small>
-          <button
-            mat-icon-button
-            type="button"
-            aria-label="Remover musico"
-            title="Remover musico"
-            (click)="deleteMember(member.id)"
-          >
-            <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
-          </button>
-        </article>
+        @if (editingMemberId() === member.id) {
+          <app-member-form-row
+            mode="edit"
+            [initialValue]="{ name: member.name, naipe: member.naipe, email: member.email || '' }"
+            (submitForm)="saveMemberEdit(member.id, $event)"
+            (cancelEdit)="cancelEditMember()"
+          ></app-member-form-row>
+        } @else {
+          <article>
+            <strong>{{ member.name }}</strong>
+            <span>{{ member.naipe }}</span>
+            <small>{{ member.email || 'Sem email' }}</small>
+            <div class="member-row-actions">
+              <button
+                mat-stroked-button
+                type="button"
+                (click)="startEditMember(member)"
+              >
+                Editar
+              </button>
+              <button
+                mat-icon-button
+                type="button"
+                aria-label="Remover músico"
+                title="Remover músico"
+                (click)="deleteMember(member.id)"
+              >
+                <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+              </button>
+            </div>
+          </article>
+        }
       }
 
-      <article class="member-create-row">
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
-          <mat-label>Nome</mat-label>
-          <input matInput [(ngModel)]="newMemberName" />
-        </mat-form-field>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
-          <mat-label>Naipe</mat-label>
-          <mat-select [(ngModel)]="newMemberNaipe">
-            <mat-option value="Vocalista">Vocalista</mat-option>
-            <mat-option value="Guitarra">Guitarra</mat-option>
-            <mat-option value="Viola">Viola</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
-          <mat-label>Email (opcional)</mat-label>
-          <input
-            matInput
-            type="email"
-            inputmode="email"
-            autocomplete="email"
-            spellcheck="false"
-            placeholder="nome@dominio.pt"
-            [pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'"
-            [ngModel]="newMemberEmail"
-            (ngModelChange)="updateEmailMask($event)"
-            #memberEmailModel="ngModel"
-          />
-          @if (memberEmailModel.invalid && (memberEmailModel.dirty || memberEmailModel.touched)) {
-            <mat-error>Email inválido. Usa o formato nome@dominio.pt.</mat-error>
-          }
-        </mat-form-field>
-        <button
-          mat-mini-fab
-          type="button"
-          class="add-fab"
-          aria-label="Adicionar músico"
-          title="Adicionar músico"
-          (click)="addMember()"
-          (contextmenu)="$event.preventDefault(); addMember()"
-        >
-          <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
-        </button>
-      </article>
+      <app-member-form-row
+        mode="add"
+        (submitForm)="addMember($event)"
+      ></app-member-form-row>
 
       @if (!appMembers().length) {
         <p class="empty-state">Ainda não existem músicos registados na aplicação.</p>

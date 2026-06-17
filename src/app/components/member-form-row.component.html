@@ -1,0 +1,68 @@
+<article class="member-form-row">
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Nome</mat-label>
+    <input
+      matInput
+      [ngModel]="name()"
+      (ngModelChange)="name.set($event)"
+    />
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Naipe</mat-label>
+    <mat-select
+      [ngModel]="naipe()"
+      (ngModelChange)="naipe.set($event)"
+    >
+      <mat-option value="Vocalista">Vocalista</mat-option>
+      <mat-option value="Guitarra">Guitarra</mat-option>
+      <mat-option value="Viola">Viola</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline" subscriptSizing="dynamic">
+    <mat-label>Email (opcional)</mat-label>
+    <input
+      matInput
+      type="email"
+      inputmode="email"
+      autocomplete="email"
+      spellcheck="false"
+      placeholder="nome@dominio.pt"
+      [pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'"
+      [ngModel]="email()"
+      (ngModelChange)="onEmailChange($event)"
+    />
+  </mat-form-field>
+
+  <div class="row-actions">
+    <button
+      mat-mini-fab
+      type="button"
+      class="add-fab"
+      [attr.aria-label]="mode() === 'edit' ? 'Guardar alterações do membro' : 'Adicionar membro'"
+      [attr.title]="mode() === 'edit' ? 'Guardar' : 'Adicionar membro'"
+      (click)="submit()"
+    >
+      @if (mode() === 'edit') {
+        <mat-icon aria-hidden="true">check</mat-icon>
+      } @else {
+        <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+      }
+    </button>
+
+    @if (mode() === 'edit') {
+      <button
+        mat-stroked-button
+        type="button"
+        (click)="cancel()"
+      >
+        Cancelar
+      </button>
+    }
+  </div>
+</article>
+
+@if (errorMessage()) {
+  <p class="error">{{ errorMessage() }}</p>
+}
