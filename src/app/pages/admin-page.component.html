@@ -7,45 +7,45 @@
   <section class="panel clients-panel">
     <h2>Clientes</h2>
 
-    <div class="form-grid">
-    <mat-form-field floatLabel="auto" appearance="outline" subscriptSizing="dynamic" class="field-field">
-      <mat-label>Novo cliente</mat-label>
-      <input matInput type="text" [(ngModel)]="newClientName" />
-    </mat-form-field>
-    <button
-      mat-mini-fab
-      type="button"
-      class="add-fab"
-      aria-label="Criar cliente"
-      title="Criar cliente"
-      (click)="createClient()"
-      (contextmenu)="$event.preventDefault(); createClient()"
-    >
-      <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
-    </button>
-    </div>
+    <div class="clients-list">
+      @for (client of clients(); track client.id) {
+        <article>
+          <strong>{{ client.name }}</strong>
+          <button
+            mat-icon-button
+            type="button"
+            class="danger-icon"
+            aria-label="Remover cliente"
+            title="Remover cliente"
+            (click)="deleteClient(client.id)"
+          >
+            <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
+          </button>
+        </article>
+      }
 
-    @if (clients().length) {
-      <div class="clients-list">
-        @for (client of clients(); track client.id) {
-          <article>
-            <strong>{{ client.name }}</strong>
-            <button
-              mat-icon-button
-              type="button"
-              class="danger-icon"
-              aria-label="Remover cliente"
-              title="Remover cliente"
-              (click)="deleteClient(client.id)"
-            >
-                <mat-icon aria-hidden="true" svgIcon="delete"></mat-icon>
-            </button>
-          </article>
-        }
-      </div>
-    } @else {
-      <p class="empty-state">Ainda não existem clientes.</p>
-    }
+      <article class="client-create-row">
+        <mat-form-field floatLabel="auto" appearance="outline" subscriptSizing="dynamic" class="field-field">
+          <mat-label>Novo cliente</mat-label>
+          <input matInput type="text" [(ngModel)]="newClientName" />
+        </mat-form-field>
+        <button
+          mat-mini-fab
+          type="button"
+          class="add-fab"
+          aria-label="Criar cliente"
+          title="Criar cliente"
+          (click)="createClient()"
+          (contextmenu)="$event.preventDefault(); createClient()"
+        >
+          <mat-icon aria-hidden="true" svgIcon="add"></mat-icon>
+        </button>
+      </article>
+
+      @if (!clients().length) {
+        <p class="empty-state">Ainda não existem clientes.</p>
+      }
+    </div>
 
     @if (clientErrorMessage) {
       <p class="error">{{ clientErrorMessage }}</p>
