@@ -1,13 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, computed, effect, inject, signal } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
+import { of, switchMap } from 'rxjs';
 import { Member, Naipe } from '../models/schedule.models';
+import { AuthService } from '../services/auth.service';
 import { ScheduleDataService } from '../services/schedule-data.service';
 
 interface ClientSummary {
@@ -39,9 +41,21 @@ interface ClientSummary {
 })
 export class AdminPageComponent {
   private readonly data = inject(ScheduleDataService);
+  private readonly auth = inject(AuthService);
 
-  readonly clients = toSignal(this.data.observeClients(), { initialValue: [] });
-  readonly appMembers = toSignal(this.data.observeAppMembers(), { initialValue: [] });
+  readonly clients = toSignal(
+    toObservable(this.auth.isLoggedIn).pipe(
+      switchMap((isLoggedIn) => (isLoggedIn ? this.data.observeClients() : of([])))
+    ),
+    { initialValue: [] }
+  );
+
+  readonly appMembers = toSignal(
+    toObservable(this.auth.isLoggedIn).pipe(
+      switchMap((isLoggedIn) => (isLoggedIn ? this.data.observeAppMembers() : of([])))
+    ),
+    { initialValue: [] }
+  );
 
   readonly clientSummaries = computed(() => {
     const members = this.appMembers();

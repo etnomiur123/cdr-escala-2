@@ -55,9 +55,13 @@ export class MonthPageComponent {
   );
 
   readonly month = toSignal(
-    combineLatest([toObservable(this.clientId), toObservable(this.monthId)]).pipe(
-      switchMap(([clientId, monthId]) => {
-        if (!clientId || !monthId) {
+    combineLatest([
+      toObservable(this.clientId),
+      toObservable(this.monthId),
+      toObservable(this.auth.isLoggedIn)
+    ]).pipe(
+      switchMap(([clientId, monthId, isLoggedIn]) => {
+        if (!clientId || !monthId || !isLoggedIn) {
           return of(null);
         }
 
@@ -70,23 +74,34 @@ export class MonthPageComponent {
   );
 
   readonly allMonths = toSignal(
-    toObservable(this.clientId).pipe(
-      switchMap((clientId) => (clientId ? this.data.observeMonths(clientId) : of([])))
+    combineLatest([
+      toObservable(this.clientId),
+      toObservable(this.auth.isLoggedIn)
+    ]).pipe(
+      switchMap(([clientId, isLoggedIn]) =>
+        clientId && isLoggedIn ? this.data.observeMonths(clientId) : of([])
+      )
     ),
     { initialValue: [] }
   );
 
   readonly slots = toSignal(
-    combineLatest([toObservable(this.clientId), toObservable(this.monthId)]).pipe(
-      switchMap(([clientId, monthId]) =>
-        clientId && monthId ? this.data.observeSlots(clientId, monthId) : of([])
+    combineLatest([
+      toObservable(this.clientId),
+      toObservable(this.monthId),
+      toObservable(this.auth.isLoggedIn)
+    ]).pipe(
+      switchMap(([clientId, monthId, isLoggedIn]) =>
+        clientId && monthId && isLoggedIn ? this.data.observeSlots(clientId, monthId) : of([])
       )
     ),
     { initialValue: [] }
   );
 
   readonly members = toSignal(
-    this.data.observeAppMembers(),
+    toObservable(this.auth.isLoggedIn).pipe(
+      switchMap((isLoggedIn) => (isLoggedIn ? this.data.observeAppMembers() : of([])))
+    ),
     { initialValue: [] }
   );
 

@@ -9,6 +9,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { RouterLink } from '@angular/router';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { of, switchMap } from 'rxjs';
+import { AuthService } from '../services/auth.service';
 import { ScheduleDataService } from '../services/schedule-data.service';
 
 @Component({
@@ -29,8 +30,14 @@ import { ScheduleDataService } from '../services/schedule-data.service';
 })
 export class HomePageComponent {
   private readonly data = inject(ScheduleDataService);
+  private readonly auth = inject(AuthService);
 
-  readonly clients = toSignal(this.data.observeClients(), { initialValue: [] });
+  readonly clients = toSignal(
+    toObservable(this.auth.isLoggedIn).pipe(
+      switchMap((isLoggedIn) => (isLoggedIn ? this.data.observeClients() : of([])))
+    ),
+    { initialValue: [] }
+  );
   readonly selectedClientId = signal('');
 
   readonly monthSummaries = toSignal(

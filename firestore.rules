@@ -11,6 +11,10 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    match /members/{memberId} {
+      allow read, write: if isSignedIn();
+    }
+
     match /clients/{clientId} {
       allow read, write: if isSignedIn();
 
