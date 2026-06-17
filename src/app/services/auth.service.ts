@@ -26,11 +26,10 @@ export class AuthService {
     const result = await signInWithPopup(this.auth, provider);
     const firebaseUser = result.user;
 
-    const userProfile: UserProfile = {
+    const userProfile: Omit<UserProfile, 'naipe'> = {
       uid: firebaseUser.uid,
       displayName: firebaseUser.displayName ?? 'Sem nome',
       email: firebaseUser.email ?? '',
-      naipe: null,
       updatedAt: Date.now(),
       createdAt: Date.now()
     };
