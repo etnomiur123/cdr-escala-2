@@ -42,6 +42,7 @@ interface ClientSummary {
 export class AdminPageComponent {
   private readonly data = inject(ScheduleDataService);
   private readonly auth = inject(AuthService);
+  private readonly emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
 
   readonly clients = toSignal(
     toObservable(this.auth.isLoggedIn).pipe(
@@ -105,11 +106,17 @@ export class AdminPageComponent {
       return;
     }
 
+    const email = this.maskEmail(this.newMemberEmail);
+    if (email && !this.emailRegex.test(email)) {
+      this.memberErrorMessage = 'Email inválido. Usa o formato nome@dominio.pt.';
+      return;
+    }
+
     try {
       await this.data.addMember({
         name,
         naipe: this.newMemberNaipe,
-        email: this.newMemberEmail.trim() || undefined,
+        email: email || undefined,
         active: true
       });
 
@@ -137,6 +144,14 @@ export class AdminPageComponent {
       this.memberErrorMessage =
         'Sem permissão para remover membro. Verifica regras Firestore e autenticação.';
     }
+  }
+
+  updateEmailMask(value: string) {
+    this.newMemberEmail = this.maskEmail(value);
+  }
+
+  private maskEmail(value: string): string {
+    return value.replace(/\s+/g, '').toLowerCase();
   }
 
   private toClientSummary(id: string, name: string, members: Member[]): ClientSummary {

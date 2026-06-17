@@ -121,7 +121,21 @@
       </mat-form-field>
       <mat-form-field appearance="outline" subscriptSizing="dynamic">
         <mat-label>Email (opcional)</mat-label>
-        <input matInput [(ngModel)]="newMemberEmail" />
+        <input
+          matInput
+          type="email"
+          inputmode="email"
+          autocomplete="email"
+          spellcheck="false"
+          placeholder="nome@dominio.pt"
+          [pattern]="'^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,}$'"
+          [ngModel]="newMemberEmail"
+          (ngModelChange)="updateEmailMask($event)"
+          #memberEmailModel="ngModel"
+        />
+        @if (memberEmailModel.invalid && (memberEmailModel.dirty || memberEmailModel.touched)) {
+          <mat-error>Email inválido. Usa o formato nome@dominio.pt.</mat-error>
+        }
       </mat-form-field>
       <button
         mat-mini-fab
