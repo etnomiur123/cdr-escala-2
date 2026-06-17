@@ -1,61 +1,68 @@
-<main class="app-shell">
-  <header class="topbar">
-    <div class="brand">
-      <p class="eyebrow">Escala de Musicos</p>
-      <h1>Canto do Rio Planner</h1>
-    </div>
+@if (auth.isAuthLoading()) {
+  <section class="app-loading" aria-live="polite" aria-busy="true">
+    <mat-spinner diameter="56"></mat-spinner>
+    <p>A carregar aplicacao...</p>
+  </section>
+} @else {
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand">
+        <p class="eyebrow">Escala de Musicos</p>
+        <h1>Canto do Rio Planner</h1>
+      </div>
 
-    <div class="auth-box">
-      @if (auth.isLoggedIn()) {
-        <p>
-          Sessao: <strong>{{ auth.user()?.displayName || auth.user()?.email }}</strong>
-        </p>
+      <div class="auth-box">
+        @if (auth.isLoggedIn()) {
+          <p>
+            Sessao: <strong>{{ auth.user()?.displayName || auth.user()?.email }}</strong>
+          </p>
 
-        <mat-form-field appearance="outline" subscriptSizing="dynamic">
-          <mat-label>Naipe</mat-label>
-          <mat-select [ngModel]="profile()?.naipe || ''" (ngModelChange)="setNaipe($event)">
-            <mat-option value="">Selecionar</mat-option>
-            <mat-option value="Vocalista">Voz</mat-option>
-            <mat-option value="Guitarra">Guitarra Portuguesa</mat-option>
-            <mat-option value="Viola">Viola</mat-option>
-          </mat-select>
-        </mat-form-field>
+          <mat-form-field appearance="outline" subscriptSizing="dynamic">
+            <mat-label>Naipe</mat-label>
+            <mat-select [ngModel]="profile()?.naipe || ''" (ngModelChange)="setNaipe($event)">
+              <mat-option value="">Selecionar</mat-option>
+              <mat-option value="Vocalista">Voz</mat-option>
+              <mat-option value="Guitarra">Guitarra Portuguesa</mat-option>
+              <mat-option value="Viola">Viola</mat-option>
+            </mat-select>
+          </mat-form-field>
 
-        <button
-          mat-icon-button
-          type="button"
-          class="logout-button"
-          aria-label="Sair da sessao"
-          title="Sair"
-          (click)="auth.logout()"
-        >
-          <mat-icon aria-hidden="true" svgIcon="logout"></mat-icon>
-        </button>
-      } @else {
-        <p>Entra com Google para gerir escalas e responder disponibilidades.</p>
-        <button mat-raised-button type="button" (click)="auth.loginWithGoogle()">Entrar com Google</button>
-      }
-    </div>
-  </header>
+          <button
+            mat-icon-button
+            type="button"
+            class="logout-button"
+            aria-label="Sair da sessao"
+            title="Sair"
+            (click)="auth.logout()"
+          >
+            <mat-icon aria-hidden="true" svgIcon="logout"></mat-icon>
+          </button>
+        } @else {
+          <p>Entra com Google para gerir escalas e responder disponibilidades.</p>
+          <button mat-raised-button type="button" (click)="auth.loginWithGoogle()">Entrar com Google</button>
+        }
+      </div>
+    </header>
 
-  <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="page-nav" aria-label="Navegacao principal">
-    <a mat-tab-link
-      routerLink="/escalas"
-      routerLinkActive
-      #rlaHome="routerLinkActive"
-      [active]="rlaHome.isActive"
-    >Escalas</a>
-    @if (auth.isLoggedIn()) {
+    <nav mat-tab-nav-bar [tabPanel]="tabPanel" class="page-nav" aria-label="Navegacao principal">
       <a mat-tab-link
-        routerLink="/administracao"
+        routerLink="/escalas"
         routerLinkActive
-        #rlaAdmin="routerLinkActive"
-        [active]="rlaAdmin.isActive"
-      >Administracao</a>
-    }
-  </nav>
+        #rlaHome="routerLinkActive"
+        [active]="rlaHome.isActive"
+      >Escalas</a>
+      @if (auth.isLoggedIn()) {
+        <a mat-tab-link
+          routerLink="/administracao"
+          routerLinkActive
+          #rlaAdmin="routerLinkActive"
+          [active]="rlaAdmin.isActive"
+        >Administracao</a>
+      }
+    </nav>
 
-  <mat-tab-nav-panel #tabPanel class="page-content">
-    <router-outlet></router-outlet>
-  </mat-tab-nav-panel>
-</main>
+    <mat-tab-nav-panel #tabPanel class="page-content">
+      <router-outlet></router-outlet>
+    </mat-tab-nav-panel>
+  </main>
+}

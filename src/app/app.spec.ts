@@ -1,5 +1,6 @@
 import { computed, provideZonelessChangeDetection, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 import { App } from './app';
 import { AuthService } from './services/auth.service';
@@ -8,15 +9,18 @@ import { ScheduleDataService } from './services/schedule-data.service';
 describe('App', () => {
   beforeEach(async () => {
     const user = signal<{ uid: string; displayName: string; email: string } | null>(null);
+    const isAuthLoading = signal(false);
 
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
         provideZonelessChangeDetection(),
+        provideRouter([]),
         {
           provide: AuthService,
           useValue: {
             user,
+            isAuthLoading,
             isLoggedIn: computed(() => user() !== null),
             loginWithGoogle: jasmine.createSpy('loginWithGoogle'),
             logout: jasmine.createSpy('logout')

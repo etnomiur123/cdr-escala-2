@@ -16,7 +16,9 @@ export class AuthService {
   private readonly auth = inject(Auth);
   private readonly firestore = inject(Firestore);
 
-  readonly user = toSignal<User | null>(authState(this.auth), { initialValue: null });
+  private readonly authUser = toSignal<User | null | undefined>(authState(this.auth));
+  readonly user = computed(() => this.authUser() ?? null);
+  readonly isAuthLoading = computed(() => this.authUser() === undefined);
   readonly isLoggedIn = computed(() => this.user() !== null);
 
   async loginWithGoogle(): Promise<void> {
