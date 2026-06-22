@@ -17,14 +17,12 @@ export const routes: Routes = [
 	{
 		path: 'escalas',
 		loadComponent: () =>
-			import('./pages/home-page.component').then((module) => module.HomePageComponent),
-		children: [
-			{
-				path: 'cliente/:clientId/mes/:monthId',
-				loadComponent: () =>
-					import('./pages/month-page.component').then((module) => module.MonthPageComponent)
-			}
-		]
+			import('./pages/home-page.component').then((module) => module.HomePageComponent)
+	},
+	{
+		path: 'escalas/cliente/:clientId/mes/:monthId',
+		loadComponent: () =>
+			import('./pages/month-page.component').then((module) => module.MonthPageComponent)
 	},
 	{
 		path: 'administracao',

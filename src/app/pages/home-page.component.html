@@ -46,7 +46,7 @@
           @for (summary of monthSummaries(); track summary.month.id) {
             <tr>
               <td>
-                <a [routerLink]="['cliente', selectedClientId(), 'mes', summary.month.id]">
+                <a [routerLink]="['/escalas', 'cliente', selectedClientId(), 'mes', summary.month.id]">
                   {{ summary.month.label }}
                 </a>
               </td>
