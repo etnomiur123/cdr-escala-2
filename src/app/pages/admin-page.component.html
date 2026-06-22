@@ -94,6 +94,38 @@
             } @else {
               <p class="empty-state">Sem membros registados.</p>
             }
+
+            @if (availableMembersForClient(summary).length) {
+              <div class="member-add-row">
+                <mat-form-field
+                  floatLabel="auto"
+                  appearance="outline"
+                  subscriptSizing="dynamic"
+                  class="field-field"
+                >
+                  <mat-label>Adicionar músico</mat-label>
+                  <mat-select
+                    [ngModel]="memberToAddByClient()[summary.id] || ''"
+                    (ngModelChange)="setMemberToAdd(summary.id, $event)"
+                  >
+                    @for (member of availableMembersForClient(summary); track member.id) {
+                      <mat-option [value]="member.id">{{ member.name }} — {{ member.naipe }}</mat-option>
+                    }
+                  </mat-select>
+                </mat-form-field>
+                <button
+                  mat-mini-fab
+                  type="button"
+                  class="add-fab"
+                  aria-label="Adicionar músico a este cliente"
+                  title="Adicionar a este cliente"
+                  [disabled]="!memberToAddByClient()[summary.id]"
+                  (click)="addMemberToClient(summary.id)"
+                >
+                  <mat-icon aria-hidden="true">add</mat-icon>
+                </button>
+              </div>
+            }
           </article>
         }
       </div>

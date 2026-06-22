@@ -47,6 +47,7 @@ export class AdminPageComponent {
   private readonly emailRegex = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
 
   readonly editingMemberId = signal<string | null>(null);
+  readonly memberToAddByClient = signal<Record<string, string>>({});
 
   readonly clients = toSignal(
     toObservable(this.auth.isLoggedIn).pipe(
@@ -202,6 +203,34 @@ export class AdminPageComponent {
     } catch {
       this.memberErrorMessage =
         'Sem permissão para remover membro do cliente. Verifica regras Firestore e autenticação.';
+    }
+  }
+
+  availableMembersForClient(summary: ClientSummary): Member[] {
+    const existing = new Set(summary.members.map((member) => member.id));
+    return this.appMembers().filter((member) => !existing.has(member.id));
+  }
+
+  setMemberToAdd(clientId: string, memberId: string) {
+    this.memberToAddByClient.update((selection) => ({ ...selection, [clientId]: memberId }));
+  }
+
+  async addMemberToClient(clientId: string) {
+    const memberId = this.memberToAddByClient()[clientId];
+    if (!memberId) {
+      return;
+    }
+
+    try {
+      await this.data.addMemberToClient(clientId, memberId);
+      this.memberToAddByClient.update((selection) => {
+        const next = { ...selection };
+        delete next[clientId];
+        return next;
+      });
+    } catch {
+      this.memberErrorMessage =
+        'Sem permissão para adicionar membro ao cliente. Verifica regras Firestore e autenticação.';
     }
   }
 

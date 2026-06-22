@@ -111,6 +111,27 @@
   color: var(--muted);
 }
 
+.member-add-row {
+  position: relative;
+  margin-top: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.member-add-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -0.4rem;
+  border-top: 1px dashed var(--line);
+}
+
+.member-add-row mat-form-field {
+  flex: 1;
+}
+
 .members-admin h2 {
   margin: 0 0 0.75rem;
   font-size: 1.1rem;

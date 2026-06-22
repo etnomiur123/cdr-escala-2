@@ -248,6 +248,23 @@ export class ScheduleDataService {
     });
   }
 
+  async addMemberToClient(clientId: string, memberId: string): Promise<void> {
+    const clientRef = doc(this.firestore, `clients/${clientId}`);
+    const batch = writeBatch(this.firestore);
+
+    // Mark associations as explicitly managed so the legacy "all members" fallback no longer applies.
+    batch.set(clientRef, { membersConfigured: true }, { merge: true });
+
+    // Associate only the selected member with the client.
+    batch.set(
+      doc(this.firestore, `clients/${clientId}/members/${memberId}`),
+      { createdAt: Date.now() },
+      { merge: true }
+    );
+
+    await batch.commit();
+  }
+
   async removeMemberFromClient(clientId: string, memberId: string, allMemberIds: string[]): Promise<void> {
     const clientRef = doc(this.firestore, `clients/${clientId}`);
     const clientMembersRef = collection(this.firestore, `clients/${clientId}/members`);
