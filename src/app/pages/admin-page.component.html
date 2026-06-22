@@ -82,9 +82,9 @@
                     <button
                       mat-icon-button
                       type="button"
-                      aria-label="Remover musico"
-                      title="Remover musico"
-                      (click)="deleteMember(member.id)"
+                      aria-label="Remover músico deste cliente"
+                      title="Remover deste cliente"
+                      (click)="removeMemberFromClient(summary.id, member.id)"
                     >
                       <mat-icon aria-hidden="true">delete</mat-icon>
                     </button>

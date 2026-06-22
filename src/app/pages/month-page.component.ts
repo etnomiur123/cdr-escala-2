@@ -99,8 +99,13 @@ export class MonthPageComponent {
   );
 
   readonly members = toSignal(
-    toObservable(this.auth.isLoggedIn).pipe(
-      switchMap((isLoggedIn) => (isLoggedIn ? this.data.observeAppMembers() : of([])))
+    combineLatest([
+      toObservable(this.clientId),
+      toObservable(this.auth.isLoggedIn)
+    ]).pipe(
+      switchMap(([clientId, isLoggedIn]) =>
+        clientId && isLoggedIn ? this.data.observeClientMembers(clientId) : of([])
+      )
     ),
     { initialValue: [] }
   );

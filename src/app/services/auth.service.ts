@@ -7,9 +7,9 @@ import {
   signInWithPopup,
   signOut
 } from '@angular/fire/auth';
-import { Firestore, doc, setDoc } from '@angular/fire/firestore';
+import { Firestore, doc, getDoc, setDoc } from '@angular/fire/firestore';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { UserProfile } from '../models/schedule.models';
+import { Naipe, UserProfile } from '../models/schedule.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
@@ -25,16 +25,37 @@ export class AuthService {
     const provider = new GoogleAuthProvider();
     const result = await signInWithPopup(this.auth, provider);
     const firebaseUser = result.user;
+    const userRef = doc(this.firestore, `users/${firebaseUser.uid}`);
+    const memberRef = doc(this.firestore, `members/${firebaseUser.uid}`);
+    const userSnapshot = await getDoc(userRef);
+    const memberSnapshot = await getDoc(memberRef);
+    const isFirstLogin = !userSnapshot.exists();
+    const isMissingMember = !memberSnapshot.exists();
+    const existingCreatedAt = userSnapshot.data()?.['createdAt'] as number | undefined;
+    const existingNaipe = userSnapshot.data()?.['naipe'] as Naipe | null | undefined;
+    const now = Date.now();
 
     const userProfile: Omit<UserProfile, 'naipe'> = {
       uid: firebaseUser.uid,
       displayName: firebaseUser.displayName ?? 'Sem nome',
       email: firebaseUser.email ?? '',
-      updatedAt: Date.now(),
-      createdAt: Date.now()
+      updatedAt: now,
+      createdAt: existingCreatedAt ?? now
     };
 
-    await setDoc(doc(this.firestore, `users/${firebaseUser.uid}`), userProfile, { merge: true });
+    await setDoc(userRef, userProfile, { merge: true });
+
+    if (isFirstLogin || isMissingMember) {
+      // Ensure every authenticated user has a matching member entry.
+      await setDoc(memberRef, {
+        name: firebaseUser.displayName ?? firebaseUser.email?.split('@')[0] ?? 'Sem nome',
+        naipe: existingNaipe ?? 'Vocalista',
+        email: firebaseUser.email ?? '',
+        active: true,
+        createdAt: now,
+        updatedAt: now
+      }, { merge: true });
+    }
   }
 
   logout(): Promise<void> {

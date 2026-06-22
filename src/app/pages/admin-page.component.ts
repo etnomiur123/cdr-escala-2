@@ -7,7 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { of, switchMap } from 'rxjs';
+import { combineLatest, map, of, switchMap } from 'rxjs';
 import { MemberFormRowComponent, MemberFormValue } from '../components/member-form-row.component';
 import { Member, Naipe } from '../models/schedule.models';
 import { AuthService } from '../services/auth.service';
@@ -62,10 +62,24 @@ export class AdminPageComponent {
     { initialValue: [] }
   );
 
-  readonly clientSummaries = computed(() => {
-    const members = this.appMembers();
-    return this.clients().map((client) => this.toClientSummary(client.id, client.name, members));
-  });
+  readonly clientSummaries = toSignal(
+    toObservable(this.clients).pipe(
+      switchMap((clients) => {
+        if (!clients.length) {
+          return of([] as ClientSummary[]);
+        }
+
+        const summaryStreams = clients.map((client) =>
+          this.data.observeClientMembers(client.id).pipe(
+            map((members) => this.toClientSummary(client.id, client.name, members))
+          )
+        );
+
+        return combineLatest(summaryStreams);
+      })
+    ),
+    { initialValue: [] }
+  );
 
   readonly totalActiveMusicians = computed(
     () => this.appMembers().filter((member) => member.active).length
@@ -178,6 +192,16 @@ export class AdminPageComponent {
     } catch {
       this.memberErrorMessage =
         'Sem permissão para remover membro. Verifica regras Firestore e autenticação.';
+    }
+  }
+
+  async removeMemberFromClient(clientId: string, memberId: string) {
+    try {
+      const allMemberIds = this.appMembers().map((member) => member.id);
+      await this.data.removeMemberFromClient(clientId, memberId, allMemberIds);
+    } catch {
+      this.memberErrorMessage =
+        'Sem permissão para remover membro do cliente. Verifica regras Firestore e autenticação.';
     }
   }
 

@@ -17,6 +17,7 @@ export interface Client {
   id: string;
   name: string;
   createdAt: number;
+  membersConfigured?: boolean;
 }
 
 export interface MonthPlan {

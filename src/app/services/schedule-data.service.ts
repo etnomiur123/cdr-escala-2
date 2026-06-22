@@ -191,13 +191,46 @@ export class ScheduleDataService {
     );
   }
 
-  async addMember(member: Omit<Member, 'id' | 'createdAt' | 'updatedAt'>) {
+  observeClientMemberIds(clientId: string) {
+    const membersRef = collection(this.firestore, `clients/${clientId}/members`);
+    return collectionData(membersRef, { idField: 'id' }).pipe(
+      map((items) => (items as Array<{ id: string }>).map((item) => item.id))
+    );
+  }
+
+  observeClientMembers(clientId: string) {
+    const clientRef = doc(this.firestore, `clients/${clientId}`);
+    const client$ = docData(clientRef) as unknown as import('rxjs').Observable<Client | undefined>;
+    return combineLatest([
+      this.observeAppMembers(),
+      this.observeClientMemberIds(clientId),
+      client$
+    ]).pipe(
+      map(([allMembers, memberIds, client]) => {
+        const membersConfigured = client?.membersConfigured === true;
+
+        // Legacy mode: associations were never explicitly configured, so all global members are available.
+        if (!membersConfigured && !memberIds.length) {
+          return allMembers;
+        }
+
+        const allowed = new Set(memberIds);
+        return allMembers.filter((member) => allowed.has(member.id));
+      })
+    );
+  }
+
+  async addMember(member: Omit<Member, 'id' | 'createdAt' | 'updatedAt'>): Promise<string> {
     const membersRef = collection(this.firestore, 'members');
-    await addDoc(membersRef, {
+    const memberRef = await addDoc(membersRef, {
       ...member,
       createdAt: Date.now(),
       updatedAt: Date.now()
     });
+
+    await this.addMemberToConfiguredClients(memberRef.id);
+
+    return memberRef.id;
   }
 
   async deleteMember(memberId: string): Promise<void> {
@@ -215,6 +248,50 @@ export class ScheduleDataService {
     });
   }
 
+  async removeMemberFromClient(clientId: string, memberId: string, allMemberIds: string[]): Promise<void> {
+    const clientRef = doc(this.firestore, `clients/${clientId}`);
+    const clientMembersRef = collection(this.firestore, `clients/${clientId}/members`);
+    const clientMembersSnapshot = await getDocs(clientMembersRef);
+
+    const batch = writeBatch(this.firestore);
+
+    // Mark associations as explicitly managed so emptying them no longer falls back to "all members".
+    batch.set(clientRef, { membersConfigured: true }, { merge: true });
+
+    if (clientMembersSnapshot.empty) {
+      // Legacy mode has empty association collections; materialize explicit links minus removed member.
+      const memberIdsToKeep = allMemberIds.filter((id) => id !== memberId);
+      for (const id of memberIdsToKeep) {
+        batch.set(doc(this.firestore, `clients/${clientId}/members/${id}`), {
+          createdAt: Date.now()
+        });
+      }
+    } else {
+      batch.delete(doc(this.firestore, `clients/${clientId}/members/${memberId}`));
+    }
+
+    await batch.commit();
+  }
+
+  private async addMemberToConfiguredClients(memberId: string): Promise<void> {
+    const clientsRef = collection(this.firestore, 'clients');
+    const clientsSnapshot = await getDocs(clientsRef);
+
+    for (const clientDoc of clientsSnapshot.docs) {
+      const clientMembersRef = collection(this.firestore, `clients/${clientDoc.id}/members`);
+      const clientMembersSnapshot = await getDocs(clientMembersRef);
+
+      // Only explicit (already configured) client memberships need this link.
+      if (!clientMembersSnapshot.empty) {
+        await setDoc(
+          doc(this.firestore, `clients/${clientDoc.id}/members/${memberId}`),
+          { createdAt: Date.now() },
+          { merge: true }
+        );
+      }
+    }
+  }
+
   observeUserProfile(uid: string) {
     const userRef = doc(this.firestore, `users/${uid}`);
     return docData(userRef, { idField: 'uid' }) as unknown as ReturnType<
@@ -226,6 +303,17 @@ export class ScheduleDataService {
     const userRef = doc(this.firestore, `users/${uid}`);
     await setDoc(
       userRef,
+      {
+        naipe,
+        updatedAt: Date.now()
+      },
+      { merge: true }
+    );
+
+    // Keep the matching member entry in sync with the chosen naipe.
+    const memberRef = doc(this.firestore, `members/${uid}`);
+    await setDoc(
+      memberRef,
       {
         naipe,
         updatedAt: Date.now()
